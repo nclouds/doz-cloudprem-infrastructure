@@ -23,7 +23,7 @@ locals {
 #  ########### Resources ###########
 
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
   version = "2.64.0"
 
   name = local.identifier
@@ -37,8 +37,8 @@ module "vpc" {
   enable_vpn_gateway = false
 
   tags = {
-    Terraform = "true"
+    Terraform   = "true"
     Environment = var.environment
-    Owner = "nclouds"
+    Owner       = "nclouds"
   }
 }
