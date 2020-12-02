@@ -40,5 +40,6 @@ module "vpc" {
     Terraform   = "true"
     Environment = var.environment
     Owner       = "nclouds"
+    Version     = "2"
   }
 }
