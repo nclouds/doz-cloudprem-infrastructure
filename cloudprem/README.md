@@ -12,14 +12,16 @@ This Terraform project contains the CloudPrem infrastructure
 
 ## Providers
 
-No provider.
+| Name | Version |
+|------|---------|
+| aws | >= 3.5 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| azs | A list of availability zones for the VPC | `list(string)` | n/a | yes |
 | environment | Environment of the application | `string` | n/a | yes |
+| highly\_available\_nat\_gateway | Should be true if you want to provision a highly available NAT Gateway across all of your private networks | `bool` | `false` | no |
 | private\_subnets | A list of private subnets inside the VPC | `list(string)` | n/a | yes |
 | public\_subnets | A list of public subnets inside the VPC | `list(string)` | n/a | yes |
 | region | The region where the resources will be deployed | `string` | n/a | yes |

@@ -18,9 +18,16 @@ provider "aws" {
 
 locals {
   identifier = "cloudprem-${var.environment}"
+
+  tags = {
+    Terraform = "true"
+    Project   = "cloudprem"
+  }
 }
 
 #  ########### Resources ###########
+
+data "aws_availability_zones" "available" {}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -28,18 +35,28 @@ module "vpc" {
 
   name = local.identifier
   cidr = var.vpc_cidr
+  azs  = slice(data.aws_availability_zones.available.names, 0, 2)
 
-  azs             = var.azs
-  private_subnets = var.private_subnets
-  public_subnets  = var.public_subnets
+  enable_nat_gateway     = true
+  single_nat_gateway     = ! var.highly_available_nat_gateway
+  one_nat_gateway_per_az = true
+  enable_dns_hostnames   = true
 
-  enable_nat_gateway = false
-  enable_vpn_gateway = false
+  public_subnets = var.public_subnets
 
-  tags = {
-    Terraform   = "true"
-    Environment = var.environment
-    Owner       = "nclouds"
-    Version     = "2"
+  public_subnet_tags = {
+    "kubernetes.io/cluster/${local.identifier}" = "shared"
+    "kubernetes.io/role/elb"                    = "1"
+    "type"                                      = "public"
   }
+
+  private_subnets = var.private_subnets
+
+  private_subnet_tags = {
+    "kubernetes.io/cluster/${local.identifier}" = "shared"
+    "kubernetes.io/role/internal-elb"           = "1"
+    "type"                                      = "private"
+  }
+
+  tags = local.tags
 }
