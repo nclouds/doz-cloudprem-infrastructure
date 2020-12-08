@@ -22,19 +22,13 @@ This Terraform project contains the CloudPrem infrastructure
 |------|-------------|------|---------|:--------:|
 | environment | Environment of the application | `string` | n/a | yes |
 | highly\_available\_nat\_gateway | Should be true if you want to provision a highly available NAT Gateway across all of your private networks | `bool` | `false` | no |
-| private\_subnets | A list of private subnets inside the VPC | `list(string)` | n/a | yes |
-| public\_subnets | A list of public subnets inside the VPC | `list(string)` | n/a | yes |
+| kms\_key\_id | AWS KMS key identifier which can be one of the following format: Key id, key ARN, alias name or alias ARN | `string` | `"alias/aws/s3"` | no |
 | region | The region where the resources will be deployed | `string` | n/a | yes |
-| vpc\_cidr | The CIDR block for the VPC | `string` | n/a | yes |
+| vpc\_cidr | The CIDR block for the VPC | `string` | `""` | no |
+| vpc\_id | The VPC ID where we'll be deploying our resources. (If creating a new VPC leave this field and subnets blank). | `string` | `""` | no |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| azs | A list of availability zones spefified as argument to this module |
-| private\_subnets | List of IDs of private subnets |
-| public\_subnets | List of IDs of public subnets |
-| vpc\_cidr\_block | The CIDR block of the VPC |
-| vpc\_id | The ID of the VPC |
+No output.
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -12,11 +12,11 @@ terraform {
 inputs = {
   region = "us-west-2"
 
-  vpc_cidr = "10.0.0.0/16"
+  vpc_cidr = "172.16.0.0/16"
 
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+  # public_subnet_cidrs = ["172.16.0.0/20", "172.16.16.0/20", "172.16.32.0/20"]
 
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
+  # private_subnet_cidrs  = ["172.16.48.0/20", "172.16.64.0/20", "172.16.80.0/20"]
 
   environment = "dev"
 }
