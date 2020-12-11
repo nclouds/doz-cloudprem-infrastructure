@@ -61,10 +61,16 @@ variable "highly_available_nat_gateway" {
   default     = false
 }
 
-variable "kms_key_id" {
-  description = "AWS KMS key identifier which can be one of the following format: Key id, key ARN, alias name or alias ARN"
+variable "s3_kms_key_id" {
+  description = "AWS KMS key identifier for S3 encryption. The identifier can be one of the following format: Key id, key ARN, alias name or alias ARN"
   type        = string
   default     = "alias/aws/s3"
+}
+
+variable "rds_kms_key_id" {
+  description = "AWS KMS key identifier for RDS encryption. The identifier can be one of the following format: Key id, key ARN, alias name or alias ARN"
+  type        = string
+  default     = "alias/aws/rds"
 }
 
 variable "environment" {

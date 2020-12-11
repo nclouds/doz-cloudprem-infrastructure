@@ -4,7 +4,8 @@ terraform {
   required_version = ">= 0.13.5"
 
   required_providers {
-    aws = ">= 3.5"
+    aws    = ">= 3.5"
+    random = "~> 3.0.0"
   }
 }
 
@@ -60,7 +61,7 @@ data "aws_subnet_ids" "private" {
 }
 
 # data "aws_kms_key" "this" {
-#   key_id = var.kms_key_id
+#   key_id = var.s3_kms_key_id
 # }
 
 
@@ -98,50 +99,108 @@ module "vpc" {
   tags = local.tags
 }
 
-# module "guide_images_s3_bucket" {
-#   source  = "terraform-aws-modules/s3-bucket/aws"
-#   version = "1.16.0"
+module "guide_images_s3_bucket" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "1.16.0"
 
-#   bucket = "dozuki-guide-images-${local.identifier}-${data.aws_caller_identity.current.account_id}" # TODO Review bucket names
-#   acl           = "private"
-#   force_destroy = true # TODO parameterize this
+  bucket        = "dozuki-guide-images-${local.identifier}-${data.aws_caller_identity.current.account_id}" # TODO Review bucket names
+  acl           = "private"
+  force_destroy = true # TODO parameterize this
 
-#   # S3 bucket-level Public Access Block configuration
-#   block_public_acls       = true
-#   block_public_policy     = true
+  # S3 bucket-level Public Access Block configuration
+  block_public_acls   = true
+  block_public_policy = true
 
-#   server_side_encryption_configuration = {
-#     rule = {
-#       apply_server_side_encryption_by_default = {
-#         kms_master_key_id = var.kms_key_id  # TODO review parameter name
-#         sse_algorithm     = "aws:kms"
-#       }
-#     }
-#   }
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        kms_master_key_id = var.s3_kms_key_id # TODO review parameter name
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
 
-#   tags = local.tags
-# }
+  tags = local.tags
+}
 
-# module "guide_pdfs_s3_bucket" {
-#   source  = "terraform-aws-modules/s3-bucket/aws"
-#   version = "1.16.0"
+module "guide_pdfs_s3_bucket" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "1.16.0"
 
-#   bucket = "dozuki-guide-pdfs-${local.identifier}-${data.aws_caller_identity.current.account_id}" # TODO Review bucket names
-#   acl           = "private"
-#   force_destroy = true # TODO parameterize this
+  bucket        = "dozuki-guide-pdfs-${local.identifier}-${data.aws_caller_identity.current.account_id}" # TODO Review bucket names
+  acl           = "private"
+  force_destroy = true # TODO parameterize this
 
-#   # S3 bucket-level Public Access Block configuration
-#   block_public_acls       = true
-#   block_public_policy     = true
+  # S3 bucket-level Public Access Block configuration
+  block_public_acls   = true
+  block_public_policy = true
 
-#   server_side_encryption_configuration = {
-#     rule = {
-#       apply_server_side_encryption_by_default = {
-#         kms_master_key_id = var.kms_key_id  # TODO review parameter name
-#         sse_algorithm     = "aws:kms"
-#       }
-#     }
-#   }
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        kms_master_key_id = var.s3_kms_key_id # TODO review parameter name
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
 
-#   tags = local.tags
-# }
+  tags = local.tags
+}
+
+module "guide_objects_s3_bucket" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "1.16.0"
+
+  bucket        = "dozuki-guide-objects-${local.identifier}-${data.aws_caller_identity.current.account_id}" # TODO Review bucket names
+  acl           = "private"
+  force_destroy = true # TODO parameterize this
+
+  # S3 bucket-level Public Access Block configuration
+  block_public_acls   = true
+  block_public_policy = true
+
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        kms_master_key_id = var.s3_kms_key_id # TODO review parameter name
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
+
+  tags = local.tags
+}
+
+module "documents_s3_bucket" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "1.16.0"
+
+  bucket        = "dozuki-documents-${local.identifier}-${data.aws_caller_identity.current.account_id}" # TODO Review bucket names
+  acl           = "private"
+  force_destroy = true # TODO parameterize this
+
+  # S3 bucket-level Public Access Block configuration
+  block_public_acls   = true
+  block_public_policy = true
+
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        kms_master_key_id = var.s3_kms_key_id # TODO review parameter name
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
+
+  cors_rule = [
+    {
+      allowed_methods = ["GET"]
+      allowed_origins = ["*"]
+      allowed_headers = ["Authorization", "Range"]
+      expose_headers  = ["Accept-Ranges", "Content-Encoding", "Content-Length", "Content-Range"]
+      max_age_seconds = 3000
+    }
+  ]
+
+  tags = local.tags
+}
