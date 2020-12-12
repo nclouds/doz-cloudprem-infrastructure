@@ -130,6 +130,12 @@ variable "enable_bi" {
   default     = true
 }
 
+variable "cache_instance_type" {
+  description = "The compute and memory capacity of the nodes in the Cache Cluster"
+  type        = string
+  default     = "cache.t2.small"
+}
+
 variable "environment" {
   description = "Environment of the application"
   type        = string

@@ -22,6 +22,7 @@ This Terraform project contains the CloudPrem infrastructure
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| cache\_instance\_type | The compute and memory capacity of the nodes in the Cache Cluster | `string` | `"cache.t2.small"` | no |
 | enable\_bi | This option will spin up a BI slave of your master database and enable conditional replication (everything but the mysql table will be replicated so you can have custom users). | `bool` | `true` | no |
 | environment | Environment of the application | `string` | n/a | yes |
 | highly\_available\_nat\_gateway | Should be true if you want to provision a highly available NAT Gateway across all of your private networks | `bool` | `false` | no |

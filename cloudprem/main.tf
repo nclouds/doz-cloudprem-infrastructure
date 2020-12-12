@@ -342,3 +342,17 @@ module "replica" {
   # DB option group
   major_engine_version = "5.7"
 }
+
+module "memcached" {
+  source = "./modules/elasticache-memcached"
+
+  name = local.identifier
+
+  vpc_id     = local.vpc_id
+  subnet_ids = local.private_subnet_ids
+
+  allowed_cidr_blocks = [local.vpc_cidr]
+
+  cluster_size  = 1
+  instance_type = var.cache_instance_type
+}
