@@ -27,3 +27,8 @@
 #   description = "A list of availability zones spefified as argument to this module"
 #   value       = module.vpc.azs
 # }
+
+output "eks_cluster_admin_role" {
+  description = "AWS IAM role with full access to the Kubernetes cluster."
+  value       = module.cluster_admin_role.this_iam_role_arn
+}

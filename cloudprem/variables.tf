@@ -1,6 +1,7 @@
 variable "region" {
   description = "The region where the resources will be deployed"
   type        = string
+  default     = "us-west-2"
 }
 
 #  ############## VPC ##############
@@ -134,6 +135,58 @@ variable "cache_instance_type" {
   description = "The compute and memory capacity of the nodes in the Cache Cluster"
   type        = string
   default     = "cache.t2.small"
+}
+
+#  ############## EKS ##############
+
+variable "eks_instance_type" {
+  description = "The instance type of each node in the application's EKS worker node group."
+  default     = "t3.medium"
+  type        = string
+}
+
+variable "eks_volume_size" {
+  description = "The amount of local storage (in gigabytes) to allocate to each kubernetes node. Keep in mind you will be billed for this amount of storage multiplied by how many nodes you spin up (i.e. 50GB * 4 nodes = 200GB on your bill). For production installations 50GB should be the minimum. This local storage is used as a temporary holding area for uploaded and in-process assets like videos and images."
+  default     = 50
+  type        = number
+
+  validation {
+    condition     = var.eks_volume_size >= 20
+    error_message = "Less than 20GB can cause problems even on testing instances."
+  }
+}
+
+variable "eks_min_size" {
+  description = "The minimum amount of nodes we will autoscale to."
+  type        = number
+  default     = "4"
+
+  validation {
+    condition     = var.eks_min_size >= 1
+    error_message = "NodeAutoScalingGroupMinSize must be an integer >= 1."
+  }
+}
+
+variable "eks_max_size" {
+  description = "The maximum amount of nodes we will autoscale to."
+  type        = number
+  default     = "4"
+
+  validation {
+    condition     = var.eks_max_size >= 1
+    error_message = "NodeAutoScalingGroupMaxSize must be an integer >= 1\nNodeAutoScalingGroupMaxSize must be >= NodeAutoScalingGroupDesiredCapacity & NodeAutoScalingGroupMinSize."
+  }
+}
+
+variable "eks_desired_capacity" {
+  description = "This is what the node count will start out as."
+  type        = number
+  default     = "4"
+
+  validation {
+    condition     = var.eks_desired_capacity >= 1
+    error_message = "NodeAutoScalingGroupDesiredCapacity must be an integer >= 1\nNodeAutoScalingGroupDesiredCapacity must be >= NodeAutoScalingGroupMinSize\nNodeAutoScalingGroupDesiredCapacity must be <= NodeAutoScalingGroupMaxSize."
+  }
 }
 
 variable "environment" {

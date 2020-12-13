@@ -1,11 +1,13 @@
 terraform {
   backend "s3" {}
 
-  required_version = ">= 0.13.5"
+  required_version = ">= 0.14"
 
   required_providers {
-    aws    = ">= 3.5"
-    random = "~> 3.0.0"
+    aws        = ">= 3.5"
+    random     = "~> 3.0.0"
+    kubernetes = "1.13.3"
+    helm       = "~> 1.3.2"
   }
 }
 
@@ -39,6 +41,8 @@ locals {
 
 #  ########### Resources ###########
 
+data "aws_region" "current" {}
+
 data "aws_availability_zones" "available" {}
 
 data "aws_caller_identity" "current" {}
@@ -65,6 +69,10 @@ data "aws_subnet_ids" "private" {
 
 data "aws_kms_key" "rds" {
   key_id = var.rds_kms_key_id
+}
+
+data "aws_kms_key" "s3" {
+  key_id = var.s3_kms_key_id
 }
 
 
@@ -230,7 +238,7 @@ resource "random_password" "rds_password" {
   special = false
 }
 
-module "rds" { # TODO Change name to "master"
+module "rds" { # TODO Change name to "primary"
   source  = "terraform-aws-modules/rds/aws"
   version = "2.20.0"
 
