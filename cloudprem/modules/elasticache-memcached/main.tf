@@ -88,7 +88,7 @@ resource "aws_elasticache_cluster" "this" {
 
   az_mode            = var.cluster_size == 1 ? "single-az" : "cross-az"
   subnet_group_name  = aws_elasticache_subnet_group.this.name
-  security_group_ids = concat([join("", aws_security_group.this.*.id)], var.existing_security_groups)
+  security_group_ids = concat(var.create_security_group ? [aws_security_group.this[0].id] : [], var.existing_security_groups)
 
   parameter_group_name = aws_elasticache_parameter_group.this.name
 
