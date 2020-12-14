@@ -364,3 +364,10 @@ module "memcached" {
   cluster_size  = 1
   instance_type = var.cache_instance_type
 }
+
+module "sns" {
+  source  = "terraform-aws-modules/sns/aws"
+  version = "2.1.0"
+
+  name = local.identifier
+}
