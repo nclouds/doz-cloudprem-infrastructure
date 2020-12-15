@@ -32,7 +32,7 @@ provider "helm" {
 }
 
 # Admin role to access the EKS cluster. By default only the user that creates the cluster has access to it
-module "cluster_admin_role" {
+module "cluster_admin_role" { # TODO change to cluster_access_role
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
   version = "3.6.0"
 

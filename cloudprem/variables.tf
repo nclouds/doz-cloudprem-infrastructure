@@ -189,6 +189,12 @@ variable "eks_desired_capacity" {
   }
 }
 
+variable "bastion_instance_type" {
+  description = "The instance type to use for the bastion host"
+  type        = string
+  default     = "t3.micro"
+}
+
 variable "environment" {
   description = "Environment of the application"
   type        = string

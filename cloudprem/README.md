@@ -18,12 +18,14 @@ This Terraform project contains the CloudPrem infrastructure
 | Name | Version |
 |------|---------|
 | aws | >= 3.5 |
+| kubernetes | 1.13.3 |
 | random | ~> 3.0.0 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| bastion\_instance\_type | The instance type to use for the bastion host | `string` | `"t3.micro"` | no |
 | cache\_instance\_type | The compute and memory capacity of the nodes in the Cache Cluster | `string` | `"cache.t2.small"` | no |
 | eks\_desired\_capacity | This is what the node count will start out as. | `number` | `"4"` | no |
 | eks\_instance\_type | The instance type of each node in the application's EKS worker node group. | `string` | `"t3.medium"` | no |
