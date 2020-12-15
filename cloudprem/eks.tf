@@ -155,6 +155,61 @@ module "eks_cluster" {
   tags = local.tags
 }
 
+module "nlb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "5.10.0"
+
+  name = local.identifier
+
+  load_balancer_type = "network"
+
+  vpc_id  = local.vpc_id
+  subnets = local.public_subnet_ids
+
+  target_groups = [
+    {
+      name             = "${local.identifier}-replicated"
+      backend_protocol = "TCP"
+      backend_port     = 32001
+      target_type      = "instance"
+    },
+    {
+      name             = "${local.identifier}-app"
+      backend_protocol = "TCP"
+      backend_port     = 32005
+      target_type      = "instance"
+    },
+    {
+      name             = "${local.identifier}-replicated"
+      backend_protocol = "TCP"
+      backend_port     = 32010
+      target_type      = "instance"
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
+      port               = 8800
+      protocol           = "TCP"
+      target_group_index = 0
+    },
+    {
+      port               = 443
+      protocol           = "TCP"
+      target_group_index = 1
+    },
+    {
+      port               = 80
+      protocol           = "TCP"
+      target_group_index = 2
+    }
+  ]
+
+  tags = local.tags
+}
+
+
+
 module "cpu_alarm" {
   source  = "terraform-aws-modules/cloudwatch/aws//modules/metric-alarm"
   version = "1.3.0"

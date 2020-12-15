@@ -9,6 +9,7 @@ packages:
 write_files:
 - path: /home/ssm-user/.my.cnf
   permissions: '600'
+  owner: ssm-user:ssm-user
   content: |
     [client]
     host=${database_hostname}
