@@ -22,3 +22,8 @@ output "cluster_urls" {
   value       = null_resource.cluster_urls.*.triggers.name
   description = "Cluster URLs"
 }
+
+output "port" {
+  value       = aws_elasticache_cluster.this.port
+  description = "Cluster endpoint port"
+}
