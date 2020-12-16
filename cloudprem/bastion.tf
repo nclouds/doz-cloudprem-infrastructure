@@ -63,7 +63,7 @@ module "bastion" {
     aws_region                     = data.aws_region.current.name
     eks_cluster_name               = module.eks_cluster.cluster_id
     eks_cluster_access_role        = module.cluster_admin_role.this_iam_role_arn
-    database_hostname              = module.rds.this_db_instance_endpoint
+    database_hostname              = module.rds.this_db_instance_address
     database_credentials_secret_id = aws_secretsmanager_secret.rds.arn
   }))
 
