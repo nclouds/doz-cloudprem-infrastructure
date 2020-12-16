@@ -180,7 +180,7 @@ module "nlb" {
       target_type      = "instance"
     },
     {
-      name             = "${local.identifier}-replicated"
+      name             = "${local.identifier}-http-redirect"
       backend_protocol = "TCP"
       backend_port     = 32010
       target_type      = "instance"
@@ -207,8 +207,6 @@ module "nlb" {
 
   tags = local.tags
 }
-
-
 
 module "cpu_alarm" {
   source  = "terraform-aws-modules/cloudwatch/aws//modules/metric-alarm"
