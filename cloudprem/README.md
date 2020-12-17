@@ -27,6 +27,7 @@ This Terraform project contains the CloudPrem infrastructure
 |------|-------------|------|---------|:--------:|
 | bastion\_instance\_type | The instance type to use for the bastion host | `string` | `"t3.micro"` | no |
 | cache\_instance\_type | The compute and memory capacity of the nodes in the Cache Cluster | `string` | `"cache.t2.small"` | no |
+| dozuki\_license | The SSM parameter name that stores the Dozuki license file provided to you. | `string` | n/a | yes |
 | eks\_desired\_capacity | This is what the node count will start out as. | `number` | `"4"` | no |
 | eks\_instance\_type | The instance type of each node in the application's EKS worker node group. | `string` | `"t3.medium"` | no |
 | eks\_max\_size | The maximum amount of nodes we will autoscale to. | `number` | `"4"` | no |

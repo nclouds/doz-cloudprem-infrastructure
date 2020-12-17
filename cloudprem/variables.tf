@@ -195,6 +195,11 @@ variable "bastion_instance_type" {
   default     = "t3.micro"
 }
 
+variable "dozuki_license" {
+  description = "The SSM parameter name that stores the Dozuki license file provided to you."
+  type        = string
+}
+
 variable "environment" {
   description = "Environment of the application"
   type        = string

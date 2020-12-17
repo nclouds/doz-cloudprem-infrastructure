@@ -18,5 +18,7 @@ inputs = {
 
   # private_subnet_cidrs  = ["172.16.48.0/20", "172.16.64.0/20", "172.16.80.0/20"]
 
+  dozuki_license = "/cloudprem-dev/license"
+
   environment = "dev"
 }

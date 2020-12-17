@@ -150,8 +150,16 @@ resource "kubernetes_deployment" "replicated" {
         volume {
           name = "replicated-conf"
 
-          host_path {
-            path = "/etc/replicated.conf"
+          config_map {
+            name = kubernetes_config_map.replicated_config.metadata.0.name
+          }
+        }
+
+        volume {
+          name = "replicated-license"
+
+          secret {
+            secret_name = kubernetes_secret.replicated_license.metadata.0.name
           }
         }
 
@@ -291,7 +299,14 @@ resource "kubernetes_deployment" "replicated" {
 
           volume_mount {
             name       = "replicated-conf"
-            mount_path = "/host/etc/replicated.conf"
+            mount_path = "/etc/replicated.conf"
+            sub_path   = "replicated.conf"
+          }
+
+          volume_mount {
+            name       = "replicated-license"
+            mount_path = "/tmp/license.rli"
+            sub_path   = "license.rli"
           }
 
           volume_mount {
@@ -404,3 +419,30 @@ resource "kubernetes_service" "replicated_ui" {
   }
 }
 
+data "aws_ssm_parameter" "dozuki_license" {
+  name = var.dozuki_license
+}
+
+resource "kubernetes_config_map" "replicated_config" {
+  metadata {
+    name = "replicated-config"
+  }
+
+  data = {
+    "replicated.conf" = <<-EOF
+      {
+        "LicenseFileLocation": "/tmp/license.rli"
+      }
+    EOF
+  }
+}
+
+resource "kubernetes_secret" "replicated_license" {
+  metadata {
+    name = "replicated-license"
+  }
+
+  data = {
+    "license.rli" = data.aws_ssm_parameter.dozuki_license.value
+  }
+}
