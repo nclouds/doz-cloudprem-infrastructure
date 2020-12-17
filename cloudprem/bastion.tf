@@ -62,7 +62,7 @@ module "bastion" {
   user_data_base64 = base64encode(templatefile("userdata.yml", {
     aws_region                     = data.aws_region.current.name
     eks_cluster_name               = module.eks_cluster.cluster_id
-    eks_cluster_access_role        = module.cluster_admin_role.this_iam_role_arn
+    eks_cluster_access_role        = module.cluster_access_role.this_iam_role_arn
     database_hostname              = module.primary_database.this_db_instance_address
     database_credentials_secret_id = aws_secretsmanager_secret.primary_database_credentials.arn
   }))

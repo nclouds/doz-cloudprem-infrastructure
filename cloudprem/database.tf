@@ -267,7 +267,7 @@ resource "aws_dms_replication_task" "this" {
   tags = local.tags
 
   lifecycle {
-    ignore_changes = ["replication_task_settings"]
+    ignore_changes = [replication_task_settings]
   }
 
 }

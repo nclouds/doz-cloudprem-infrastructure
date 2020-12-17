@@ -30,5 +30,5 @@
 
 output "eks_cluster_admin_role" {
   description = "AWS IAM role with full access to the Kubernetes cluster."
-  value       = module.cluster_admin_role.this_iam_role_arn
+  value       = module.cluster_access_role.this_iam_role_arn
 }

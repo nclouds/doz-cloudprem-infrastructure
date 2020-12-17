@@ -6,12 +6,15 @@ data "aws_eks_cluster_auth" "cluster" {
   name = module.eks_cluster.cluster_id
 }
 
+# This provider allows other users to apply the terraform even if they didn't 
+# create the infrastructure initially. Otherwise Terraform would fail attempting to
+# create the kubernetes resources
 provider "aws" {
   alias  = "eks"
   region = var.region
 
   assume_role {
-    role_arn = module.cluster_admin_role.this_iam_role_arn
+    role_arn = module.cluster_access_role.this_iam_role_arn
   }
 }
 
@@ -32,7 +35,7 @@ provider "helm" {
 }
 
 # Admin role to access the EKS cluster. By default only the user that creates the cluster has access to it
-module "cluster_admin_role" { # TODO change to cluster_access_role
+module "cluster_access_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
   version = "3.6.0"
 
@@ -98,6 +101,42 @@ resource "aws_iam_policy" "eks_worker" {
   policy = data.aws_iam_policy_document.eks_worker.json
 }
 
+module "eks_worker_node_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "3.17.0"
+
+  name            = "${local.identifier}-worker-node"
+  use_name_prefix = false
+  description     = "Allows access to the worker nodes to expose the Cloudprem application"
+  vpc_id          = local.vpc_id
+
+  ingress_with_cidr_blocks = [
+    {
+      from_port   = 32001
+      to_port     = 32001
+      protocol    = 6
+      description = "Allow internet access to the replicated-ui"
+      cidr_blocks = var.replicated_ui_access_cidr
+    },
+    {
+      from_port   = 32005
+      to_port     = 32005
+      protocol    = 6
+      description = " Allow internet access to the app via https"
+      cidr_blocks = var.app_access_cidr
+    },
+    {
+      from_port   = 32010
+      to_port     = 32010
+      protocol    = 6
+      description = "Allow internet access to the app via http"
+      cidr_blocks = var.app_access_cidr
+    },
+  ]
+
+  egress_rules = ["all-tcp"]
+}
+
 module "eks_cluster" {
   source  = "terraform-aws-modules/eks/aws"
   version = "13.2.1"
@@ -114,6 +153,10 @@ module "eks_cluster" {
 
   workers_additional_policies = [
     aws_iam_policy.eks_worker.arn,
+  ]
+
+  worker_additional_security_group_ids = [
+    module.eks_worker_node_sg.this_security_group_id
   ]
 
   worker_groups = [
@@ -146,7 +189,7 @@ module "eks_cluster" {
 
   map_roles = [ # aws-auth configmap
     {
-      rolearn  = module.cluster_admin_role.this_iam_role_arn
+      rolearn  = module.cluster_access_role.this_iam_role_arn
       username = "admin"
       groups   = ["system:masters"]
     },
@@ -162,6 +205,7 @@ module "nlb" {
   name = local.identifier
 
   load_balancer_type = "network"
+  internal           = ! var.public_access
 
   vpc_id  = local.vpc_id
   subnets = local.public_subnet_ids
