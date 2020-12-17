@@ -71,25 +71,25 @@ resource "kubernetes_config_map" "dozuki_resources" {
     "db.json" = <<-EOF
       {
         "generic": {
-          "hostname": "${module.rds.this_db_instance_endpoint}",
+          "hostname": "${module.primary_database.this_db_instance_endpoint}",
           "user": "dozuki",
           "password": "REDACTED",
           "CAFile": "/etc/dozuki/rds-ca.pem"
         },
         "master": {
-          "hostname": "${module.rds.this_db_instance_endpoint}",
+          "hostname": "${module.primary_database.this_db_instance_endpoint}",
           "user": "dozuki",
           "password": "REDACTED",
           "CAFile": "/etc/dozuki/rds-ca.pem"
         },
         "slave": {
-          "hostname": "${module.rds.this_db_instance_endpoint}",
+          "hostname": "${module.primary_database.this_db_instance_endpoint}",
           "user": "dozuki",
           "password": "REDACTED",
           "CAFile": "/etc/dozuki/rds-ca.pem"
         },
         "sphinx": {
-          "hostname": "${module.rds.this_db_instance_endpoint}",
+          "hostname": "${module.primary_database.this_db_instance_endpoint}",
           "user": "dozuki",
           "password": "REDACTED",
           "CAFile": "/etc/dozuki/rds-ca.pem"
