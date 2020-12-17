@@ -1,4 +1,4 @@
-# EFS terraform module
+# Elasticache Memcached terraform module
 
 A terraform module to create an Elasticache Memached cluster
 
