@@ -1,3 +1,17 @@
+module "container_insights" {
+  source = "./modules/container-insights"
+
+  cluster_name = module.eks_cluster.cluster_id
+
+  aws_region = data.aws_region.current.name
+}
+
+module "replicated" {
+  source = "./modules/replicated"
+
+  dozuki_license_parameter_name = var.dozuki_license_parameter_name
+}
+
 resource "kubernetes_config_map" "dozuki_resources" {
   metadata {
     name      = "dozuki-resources-configmap"
@@ -83,7 +97,7 @@ resource "kubernetes_config_map" "dozuki_resources" {
       }
     EOF
 
-    "rds-ca.pem" = file("rds-ca-2019-root.pem")
+    "rds-ca.pem" = file("vendor/rds-ca-2019-root.pem")
 
     "index.json" = <<-EOF
       {

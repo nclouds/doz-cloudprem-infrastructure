@@ -85,7 +85,7 @@ resource "kubernetes_config_map" "cwagentconfig" {
   }
 
   data = {
-    "cwagentconfig.json" = "{\n  \"agent\": {\n    \"region\": \"${module.eks_cluster.cluster_id}\"\n  },\n  \"logs\": {\n    \"metrics_collected\": {\n      \"kubernetes\": {\n        \"cluster_name\": \"${data.aws_region.current.name}\",\n        \"metrics_collection_interval\": 60\n      }\n    },\n    \"force_flush_interval\": 5\n  }\n}\n"
+    "cwagentconfig.json" = "{\n  \"agent\": {\n    \"region\": \"${var.aws_region}\"\n  },\n  \"logs\": {\n    \"metrics_collected\": {\n      \"kubernetes\": {\n        \"cluster_name\": \"${var.cluster_name}\",\n        \"metrics_collection_interval\": 60\n      }\n    },\n    \"force_flush_interval\": 5\n  }\n}\n"
   }
 }
 
@@ -261,9 +261,9 @@ resource "kubernetes_config_map" "cluster_info" {
   }
 
   data = {
-    "cluster.name" = module.eks_cluster.cluster_id
+    "cluster.name" = var.cluster_name
 
-    "logs.region" = data.aws_region.current.name
+    "logs.region" = var.aws_region
   }
 }
 
