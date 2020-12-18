@@ -106,6 +106,12 @@ variable "rds_kms_key_id" {
   default     = "alias/aws/rds"
 }
 
+variable "create_s3_buckets" {
+  description = "Wheter to create the dozuki S3 buckets or not."
+  type        = bool
+  default     = true
+}
+
 variable "rds_snapshot_identifier" {
   description = "We can seed the database from an existing RDS snapshot in this region. Type the snapshot identifier in this field or leave blank to start with a fresh database. Note: If you do use a snapshot it's critical that during stack updates you continue to include the snapshot identifier in this parameter. Clearing this parameter after using it will cause AWS to spin up a new fresh DB and delete your old one."
   type        = string

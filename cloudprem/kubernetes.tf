@@ -60,10 +60,10 @@ resource "kubernetes_config_map" "dozuki_resources" {
     "buckets.json" = <<-EOF
       {
         "default": {
-          "guide-images": "${module.guide_images_s3_bucket.this_s3_bucket_id}",
-          "guide-pdfs": "${module.guide_pdfs_s3_bucket.this_s3_bucket_id}",
-          "documents": "${module.documents_s3_bucket.this_s3_bucket_id}",
-          "guide-objects": "${module.guide_objects_s3_bucket.this_s3_bucket_id}"
+          "guide-images": "${module.guide_images_s3_bucket[0].this_s3_bucket_id}",
+          "guide-pdfs": "${module.guide_pdfs_s3_bucket[0].this_s3_bucket_id}",
+          "documents": "${module.documents_s3_bucket[0].this_s3_bucket_id}",
+          "guide-objects": "${module.guide_objects_s3_bucket[0].this_s3_bucket_id}"
         }
       }
     EOF

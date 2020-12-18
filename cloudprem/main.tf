@@ -109,6 +109,8 @@ module "guide_images_s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "1.16.0"
 
+  count = var.create_s3_buckets ? 1 : 0
+
   bucket        = "dozuki-guide-images-${local.identifier}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = ! local.protect_resources
@@ -132,6 +134,8 @@ module "guide_images_s3_bucket" {
 module "guide_pdfs_s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "1.16.0"
+
+  count = var.create_s3_buckets ? 1 : 0
 
   bucket        = "dozuki-guide-pdfs-${local.identifier}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
@@ -157,6 +161,8 @@ module "guide_objects_s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "1.16.0"
 
+  count = var.create_s3_buckets ? 1 : 0
+
   bucket        = "dozuki-guide-objects-${local.identifier}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = ! local.protect_resources
@@ -180,6 +186,8 @@ module "guide_objects_s3_bucket" {
 module "documents_s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "1.16.0"
+
+  count = var.create_s3_buckets ? 1 : 0
 
   bucket        = "dozuki-documents-${local.identifier}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
