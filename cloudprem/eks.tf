@@ -169,6 +169,7 @@ module "eks_cluster" {
       asg_desired_capacity = var.eks_desired_capacity
       subnets              = local.private_subnet_ids
       enabled_metrics      = ["GroupInServiceInstances"]
+      target_group_arns    = module.nlb.target_group_arns
       tags = [
         {
           "key"                 = "k8s.io/cluster-autoscaler/enabled"
