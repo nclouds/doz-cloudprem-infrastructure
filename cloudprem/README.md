@@ -1,6 +1,38 @@
 # CloudPrem Infrastructure
 
-This Terraform project contains the CloudPrem infrastructure
+The Terraform project automates the creation of AWS resources as well as some base Kubernetes components required for the Cloudprem application infrastructure.
+
+![dozuki](https://app.lucidchart.com/publicSegments/view/c01199f1-8171-415f-b3ca-09206a593da5/image.png)
+
+The terraform stack is composed of many of the [open source AWS modules](https://registry.terraform.io/namespaces/terraform-aws-modules) and some custom modules defined in the [modules](./modules) directory.
+
+## Deployment
+
+The infrastructure is managed and deployed using [Terragrunt](https://terragrunt.gruntwork.io/docs/#features). By using terragrunt we are able to deploy the infrastructure to multiple environments, lock and version the infrastructure and keep Terraform code and state configuration DRY.
+
+The terragrunt configurations for each environment can be found in the [live](./live) directory. The outer [terragrunt.hcl](./live/terragrunt.hcl) file contains configurations for the backend state and locks. The [terragrunt.hcl](./live/development) files under each environment directory contain the parameters for that specific environment and the location of the Terraform stack. *(Note: For the Cloudprem infrastructure development, local references to the modules are used, eg. `../..//cloudprem`. For the customers deployment a reference to a specific version of the stack should be declared, eg. `git::https://github.com/dozuki/cloudprem-infrastructure.git//cloudprem?ref=v0.0.1`)
+
+To deploy the stack, perform the following steps:
+
+1. Initialize the backend and install the required providers and modules using terragrunt:
+
+    ```console
+    $ cd live/development
+    $ terragrun init
+    ```
+
+2. Review the parameters in the [terragrunt.hcl](./live/development/terragrunt.hcl) file and execute the plan/apply
+
+    ```console
+    $ terragrunt apply
+    ```
+
+To delete the infrastructure for the environment execute terragrunt destroy
+
+```console
+$ terragrunt destroy
+```
+
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -10,7 +42,7 @@ This Terraform project contains the CloudPrem infrastructure
 | terraform | >= 0.14 |
 | aws | >= 3.5 |
 | helm | ~> 1.3.2 |
-| kubernetes | 1.13.3 |
+| kubernetes | ~> 1.13.3 |
 | random | ~> 3.0.0 |
 
 ## Providers
@@ -18,7 +50,7 @@ This Terraform project contains the CloudPrem infrastructure
 | Name | Version |
 |------|---------|
 | aws | >= 3.5 |
-| kubernetes | 1.13.3 |
+| kubernetes | ~> 1.13.3 |
 | random | ~> 3.0.0 |
 
 ## Inputs
@@ -62,3 +94,7 @@ This Terraform project contains the CloudPrem infrastructure
 | eks\_cluster\_access\_role | AWS IAM role with full access to the Kubernetes cluster. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Development
+
+contributing information
