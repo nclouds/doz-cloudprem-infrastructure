@@ -57,6 +57,8 @@ This Terraform project contains the CloudPrem infrastructure
 
 | Name | Description |
 |------|-------------|
-| eks\_cluster\_admin\_role | AWS IAM role with full access to the Kubernetes cluster. |
+| dashboard\_url | URL to your Dozuki Dashboard. |
+| dozuki\_url | URL to your Dozuki Installation. |
+| eks\_cluster\_access\_role | AWS IAM role with full access to the Kubernetes cluster. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
