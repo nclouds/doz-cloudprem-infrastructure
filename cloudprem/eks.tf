@@ -3,6 +3,8 @@ data "aws_eks_cluster" "cluster" {
 }
 
 data "aws_eks_cluster_auth" "cluster" {
+  provider = aws.eks
+
   name = module.eks_cluster.cluster_id
 }
 
