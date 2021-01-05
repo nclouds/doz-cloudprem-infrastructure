@@ -1,22 +1,16 @@
 #!/bin/bash
 set -eoxu pipefail
 
-mkdir -p './replicated'
-GENERATE_SCRIPT='./replicated/kubernetes-yml-generate'
-REPLICATED_YAML='./replicated/replicated.yaml'
-REPLICATED_HCL='replicated.tf'
+GENERATE_SCRIPT='./kubernetes-yml-generate'
 REPLICATED_VERSION='2.40.4'
 
-curl -s "https://get.replicated.com/kubernetes-yml-generate?replicated_tag=$REPLICATED_VERSION" \
- -o "$GENERATE_SCRIPT"
+curl -s "https://get.replicated.com/kubernetes-yml-generate?replicated_tag=$REPLICATED_VERSION" -o "$GENERATE_SCRIPT"
 
 chmod +x "$GENERATE_SCRIPT"
 
 $GENERATE_SCRIPT \
  ui_bind_port=32001 \
  storage_class=gp2 \
- > "$REPLICATED_YAML"
+ > "charts/replicated/templates/replicated.yaml"
 
-k2tf -f "$REPLICATED_YAML" -o $REPLICATED_HCL
-
-rm -r replicated
+rm "$GENERATE_SCRIPT"

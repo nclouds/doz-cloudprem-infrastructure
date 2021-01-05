@@ -6,11 +6,11 @@ module "container_insights" {
   region_name = data.aws_region.current.name
 }
 
-# module "replicated" {
-#   source = "./modules/replicated"
+module "replicated" {
+  source = "./modules/replicated"
 
-#   dozuki_license_parameter_name = var.dozuki_license_parameter_name
-# }
+  dozuki_license_parameter_name = var.dozuki_license_parameter_name
+}
 
 resource "kubernetes_config_map" "dozuki_resources" {
   metadata {
