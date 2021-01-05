@@ -1,6 +1,6 @@
 resource "helm_release" "container_insights" {
   name  = "container-insights"
-  chart = "${path.module}/container_insights"
+  chart = "${path.module}/charts/container_insights"
 
   namespace = "default"
 

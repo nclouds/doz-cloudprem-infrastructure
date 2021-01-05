@@ -19,25 +19,28 @@ module "container_insights" {
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.13.0 |
-| kubernetes | ~> 1.13.3 |
+| terraform | >= 0.14.0 |
+| helm | ~> 2.0.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| kubernetes | ~> 1.13.3 |
+| helm | ~> 2.0.1 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| aws\_region | AWS region where the EKS cluster is deployed. | `string` | n/a | yes |
 | cluster\_name | The EKS cluster name. | `string` | n/a | yes |
+| region\_name | AWS region where the EKS cluster is deployed. | `string` | n/a | yes |
 
 ## Outputs
 
-No output.
+| Name | Description |
+|------|-------------|
+| cluster\_name | EKS cluster name |
+| region\_name | AWS region where container insights is configured |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
