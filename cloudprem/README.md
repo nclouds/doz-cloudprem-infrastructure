@@ -41,7 +41,7 @@ $ terragrunt destroy
 |------|---------|
 | terraform | >= 0.14 |
 | aws | >= 3.5 |
-| helm | ~> 1.3.2 |
+| helm | ~> 2.0.1 |
 | kubernetes | ~> 1.13.3 |
 | random | ~> 3.0.0 |
 

@@ -1,6 +1,6 @@
 # AWS Container Insights terraform module
 
-A terraform module to install AWS container insights in an EKS cluster
+A terraform module to install AWS container insights with fluentd in an EKS cluster
 
 ## Module usage:
 
@@ -40,3 +40,7 @@ module "container_insights" {
 No output.
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Development
+
+The module is based on the container insights kubernetes manifest kubernetes manifest from the [AWS documentation](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-EKS-quickstart.html). A simple Helm chart was created to be deployed within Terraform with the Helm provider. To update container insights to a newer version replace the templates in the Helm chart with the updated kubernetes manifests. We created a simple bash script that can be used as guidance, however we recommend to review the documentation and the script before upgrading.

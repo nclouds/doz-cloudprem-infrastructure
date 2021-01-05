@@ -1,4 +1,9 @@
-# output "cluster_id" {
-#   value       = aws_elasticache_cluster.this.id
-#   description = "Cluster ID"
-# }
+output "cluster_name" {
+  value       = var.cluster_name
+  description = "EKS cluster name"
+}
+
+output "region_name" {
+  value       = var.cluster_name
+  description = "AWS region where container insights is configured"
+}
