@@ -14,10 +14,6 @@ inputs = {
 
   vpc_cidr = "172.16.0.0/16"
 
-  # public_subnet_cidrs = ["172.16.0.0/20", "172.16.16.0/20", "172.16.32.0/20"]
-
-  # private_subnet_cidrs  = ["172.16.48.0/20", "172.16.64.0/20", "172.16.80.0/20"]
-
   dozuki_license_parameter_name = "/cloudprem-dev/license"
 
   environment = "dev"

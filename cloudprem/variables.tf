@@ -9,7 +9,7 @@ variable "vpc_id" {
 variable "vpc_cidr" {
   description = "The CIDR block for the VPC"
   type        = string
-  default     = ""
+  default     = "172.16.0.0/16"
 }
 
 variable "highly_available_nat_gateway" {
@@ -198,6 +198,7 @@ variable "bastion_instance_type" {
 variable "dozuki_license_parameter_name" {
   description = "The SSM parameter name that stores the Dozuki license file provided to you."
   type        = string
+  default     = "/cloudprem-dev/license"
 }
 
 variable "region" {
@@ -209,4 +210,5 @@ variable "region" {
 variable "environment" {
   description = "Environment of the application"
   type        = string
+  default     = "dev"
 }

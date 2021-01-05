@@ -33,7 +33,7 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | bastion\_instance\_type | The instance type to use for the bastion host | `string` | `"t3.micro"` | no |
 | cache\_instance\_type | The compute and memory capacity of the nodes in the Cache Cluster | `string` | `"cache.t2.small"` | no |
 | create\_s3\_buckets | Wheter to create the dozuki S3 buckets or not. | `bool` | `true` | no |
-| dozuki\_license\_parameter\_name | The SSM parameter name that stores the Dozuki license file provided to you. | `string` | n/a | yes |
+| dozuki\_license\_parameter\_name | The SSM parameter name that stores the Dozuki license file provided to you. | `string` | `"/cloudprem-dev/license"` | no |
 | eks\_desired\_capacity | This is what the node count will start out as. | `number` | `"4"` | no |
 | eks\_instance\_type | The instance type of each node in the application's EKS worker node group. | `string` | `"t3.medium"` | no |
 | eks\_max\_size | The maximum amount of nodes we will autoscale to. | `number` | `"4"` | no |
@@ -41,7 +41,7 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | eks\_volume\_size | The amount of local storage (in gigabytes) to allocate to each kubernetes node. Keep in mind you will be billed for this amount of storage multiplied by how many nodes you spin up (i.e. 50GB \* 4 nodes = 200GB on your bill). For production installations 50GB should be the minimum. This local storage is used as a temporary holding area for uploaded and in-process assets like videos and images. | `number` | `50` | no |
 | enable\_bastion | Setting this to true will spin up an EC2 instance and configure it for this environment for easy access to RDS and EKS. | `bool` | `true` | no |
 | enable\_bi | This option will spin up a BI slave of your master database and enable conditional replication (everything but the mysql table will be replicated so you can have custom users). | `bool` | `true` | no |
-| environment | Environment of the application | `string` | n/a | yes |
+| environment | Environment of the application | `string` | `"dev"` | no |
 | highly\_available\_nat\_gateway | Should be true if you want to provision a highly available NAT Gateway across all of your private networks | `bool` | `false` | no |
 | public\_access | Should the app and dashboard be accessible via a publicly routable IP and domain? | `bool` | `true` | no |
 | rds\_allocated\_storage | The initial size of the database (Gb) | `number` | `100` | no |
@@ -54,7 +54,7 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | region | The region where the resources will be deployed | `string` | `"us-west-2"` | no |
 | replicated\_ui\_access\_cidr | This CIDR will be allowed to connect to the app dashboard. This is where you upgrade to new versions as well as view cluster status and start/stop the cluster. You probably want to lock this down to your company network CIDR, especially if you chose 'true' for public access. | `string` | `"0.0.0.0/0"` | no |
 | s3\_kms\_key\_id | AWS KMS key identifier for S3 encryption. The identifier can be one of the following format: Key id, key ARN, alias name or alias ARN | `string` | `"alias/aws/s3"` | no |
-| vpc\_cidr | The CIDR block for the VPC | `string` | `""` | no |
+| vpc\_cidr | The CIDR block for the VPC | `string` | `"172.16.0.0/16"` | no |
 | vpc\_id | The VPC ID where we'll be deploying our resources. (If creating a new VPC leave this field and subnets blank). | `string` | `""` | no |
 
 ## Outputs
