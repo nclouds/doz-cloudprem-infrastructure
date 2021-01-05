@@ -58,3 +58,11 @@ module "replicated" {
 | security\_group\_id | Security Group ID |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Development
+
+The module is based on the replicated kubernetes manifest generated with the `kubernetes-yml-generate` by following the [Replicated documentation](https://help.replicated.com/docs/kubernetes/customer-installations/existing-cluster/). A simple Helm chart was created to be deployed within Terraform with the Helm provider. To update replicated to a newer version replace the templates in the Helm chart with the updated kubernetes manifests. We created a simple [bash script](./update_replicated_installer.sh) that can be used as guidance, however we recommend to review the documentation and the script before upgrading.
+
+```console
+$ ./update_replicated_installer.sh
+```
