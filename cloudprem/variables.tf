@@ -198,7 +198,7 @@ variable "bastion_instance_type" {
 variable "dozuki_license_parameter_name" {
   description = "The SSM parameter name that stores the Dozuki license file provided to you."
   type        = string
-  default     = "/cloudprem-dev/license"
+  default     = "/cloudprem/dev/license"
 }
 
 variable "region" {

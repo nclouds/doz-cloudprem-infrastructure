@@ -33,7 +33,7 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | bastion\_instance\_type | The instance type to use for the bastion host | `string` | `"t3.micro"` | no |
 | cache\_instance\_type | The compute and memory capacity of the nodes in the Cache Cluster | `string` | `"cache.t2.small"` | no |
 | create\_s3\_buckets | Wheter to create the dozuki S3 buckets or not. | `bool` | `true` | no |
-| dozuki\_license\_parameter\_name | The SSM parameter name that stores the Dozuki license file provided to you. | `string` | `"/cloudprem-dev/license"` | no |
+| dozuki\_license\_parameter\_name | The SSM parameter name that stores the Dozuki license file provided to you. | `string` | `"/cloudprem/dev/license"` | no |
 | eks\_desired\_capacity | This is what the node count will start out as. | `number` | `"4"` | no |
 | eks\_instance\_type | The instance type of each node in the application's EKS worker node group. | `string` | `"t3.medium"` | no |
 | eks\_max\_size | The maximum amount of nodes we will autoscale to. | `number` | `"4"` | no |
