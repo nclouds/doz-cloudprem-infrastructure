@@ -14,3 +14,8 @@ $GENERATE_SCRIPT \
  > "charts/replicated/templates/replicated.yaml"
 
 rm "$GENERATE_SCRIPT"
+
+# Adding the license voumes
+yq e 'select(.kind == "Deployment").spec.template.spec.volumes += [{"name": "replicated-license", "secret": { "secretName": "{{ .Values.license_secret }}"}}]' -i charts/replicated/templates/replicated.yaml
+yq e '(select(.kind == "Deployment").spec.template.spec.containers[] | select(.name == "replicated").volumeMounts) += [{"name": "replicated-license", "mountPath": "/tmp/license.rli", "subPath": "license.rli"}]' -i charts/replicated/templates/replicated.yaml
+
