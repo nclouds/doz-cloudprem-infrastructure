@@ -23,6 +23,6 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this Release
-            - This is a test
+            - This is a test2
           draft: false
           prerelease: false
