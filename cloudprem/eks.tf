@@ -1,13 +1,3 @@
-data "aws_eks_cluster" "cluster" {
-  name = module.eks_cluster.cluster_id
-}
-
-data "aws_eks_cluster_auth" "cluster" {
-  provider = aws.eks
-
-  name = module.eks_cluster.cluster_id
-}
-
 # This provider allows other users to apply the terraform even if they didn't 
 # create the infrastructure initially. Otherwise Terraform would fail attempting to
 # create the kubernetes resources
@@ -16,8 +6,19 @@ provider "aws" {
   region = var.region
 
   assume_role {
-    role_arn = module.cluster_access_role.this_iam_role_arn
+    role_arn     = data.aws_iam_role.create_eks_cluster.arn
+    session_name = "terraform"
   }
+}
+
+data "aws_eks_cluster" "cluster" {
+  name = module.eks_cluster.cluster_id
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  provider = aws.eks
+
+  name = module.eks_cluster.cluster_id
 }
 
 provider "kubernetes" {
@@ -35,7 +36,7 @@ provider "helm" {
   }
 }
 
-# Admin role to access the EKS cluster. By default only the user that creates the cluster has access to it
+# IAM role to access the EKS cluster. By default only the user that creates the cluster has access to it
 module "cluster_access_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
   version = "3.6.0"
@@ -141,6 +142,10 @@ module "eks_worker_node_sg" {
 module "eks_cluster" {
   source  = "terraform-aws-modules/eks/aws"
   version = "13.2.1"
+
+  providers = {
+    aws = aws.eks
+  }
 
   # EKS cofigurations
   cluster_name    = local.identifier
@@ -368,4 +373,185 @@ module "nodes_alarm" {
   ok_actions = [
     module.sns.this_sns_topic_arn
   ]
+}
+
+#  ############################# Create EKS Role #############################
+
+# The aws_iam_role data and the time_sleep resource are required to wait until
+# the role is completely created before initializing the aws.eks provider
+data "aws_iam_role" "create_eks_cluster" {
+  depends_on = [time_sleep.wait_create_eks_cluster_role]
+
+  name = module.create_eks_cluster.this_iam_role_name
+}
+
+resource "time_sleep" "wait_create_eks_cluster_role" {
+  depends_on = [module.create_eks_cluster]
+
+  create_duration = "30s"
+}
+
+# Role for the provider to create the EKS cluster
+module "create_eks_cluster" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
+  version = "3.6.0"
+
+  create_role = true
+
+  role_name         = "${local.identifier}-create-eks-cluster"
+  role_requires_mfa = false
+
+  trusted_role_arns = [
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+  ]
+
+  custom_role_policy_arns = [aws_iam_policy.create_eks_cluster.arn]
+
+  tags = local.tags
+}
+
+data "aws_iam_policy_document" "create_eks_cluster" {
+  statement {
+    actions = [
+      "elasticloadbalancing:DescribeTargetHealth",
+      "autoscaling:EnableMetricsCollection",
+      "autoscaling:AttachInstances",
+      "autoscaling:CreateAutoScalingGroup",
+      "autoscaling:CreateLaunchConfiguration",
+      "autoscaling:CreateOrUpdateTags",
+      "autoscaling:DeleteAutoScalingGroup",
+      "autoscaling:DeleteLaunchConfiguration",
+      "autoscaling:DeleteTags",
+      "autoscaling:Describe*",
+      "autoscaling:DetachInstances",
+      "autoscaling:SetDesiredCapacity",
+      "autoscaling:UpdateAutoScalingGroup",
+      "autoscaling:SuspendProcesses",
+      "ec2:AllocateAddress",
+      "ec2:AssignPrivateIpAddresses",
+      "ec2:Associate*",
+      "ec2:AttachInternetGateway",
+      "ec2:AttachNetworkInterface",
+      "ec2:AuthorizeSecurityGroupEgress",
+      "ec2:AuthorizeSecurityGroupIngress",
+      "ec2:CreateDefaultSubnet",
+      "ec2:CreateDhcpOptions",
+      "ec2:CreateEgressOnlyInternetGateway",
+      "ec2:CreateInternetGateway",
+      "ec2:CreateNatGateway",
+      "ec2:CreateNetworkInterface",
+      "ec2:CreateRoute",
+      "ec2:CreateRouteTable",
+      "ec2:CreateSecurityGroup",
+      "ec2:CreateSubnet",
+      "ec2:CreateTags",
+      "ec2:CreateVolume",
+      "ec2:CreateVpc",
+      "ec2:CreateVpcEndpoint",
+      "ec2:DeleteDhcpOptions",
+      "ec2:DeleteEgressOnlyInternetGateway",
+      "ec2:DeleteInternetGateway",
+      "ec2:DeleteNatGateway",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DeleteRoute",
+      "ec2:DeleteRouteTable",
+      "ec2:DeleteSecurityGroup",
+      "ec2:DeleteSubnet",
+      "ec2:DeleteTags",
+      "ec2:DeleteVolume",
+      "ec2:DeleteVpc",
+      "ec2:DeleteVpnGateway",
+      "ec2:Describe*",
+      "ec2:DetachInternetGateway",
+      "ec2:DetachNetworkInterface",
+      "ec2:DetachVolume",
+      "ec2:Disassociate*",
+      "ec2:ModifySubnetAttribute",
+      "ec2:ModifyVpcAttribute",
+      "ec2:ModifyVpcEndpoint",
+      "ec2:ReleaseAddress",
+      "ec2:RevokeSecurityGroupEgress",
+      "ec2:RevokeSecurityGroupIngress",
+      "ec2:UpdateSecurityGroupRuleDescriptionsEgress",
+      "ec2:UpdateSecurityGroupRuleDescriptionsIngress",
+      "ec2:CreateLaunchTemplate",
+      "ec2:CreateLaunchTemplateVersion",
+      "ec2:DeleteLaunchTemplate",
+      "ec2:DeleteLaunchTemplateVersions",
+      "ec2:DescribeLaunchTemplates",
+      "ec2:DescribeLaunchTemplateVersions",
+      "ec2:GetLaunchTemplateData",
+      "ec2:ModifyLaunchTemplate",
+      "ec2:RunInstances",
+      "eks:CreateCluster",
+      "eks:DeleteCluster",
+      "eks:DescribeCluster",
+      "eks:ListClusters",
+      "eks:UpdateClusterConfig",
+      "eks:UpdateClusterVersion",
+      "eks:DescribeUpdate",
+      "eks:TagResource",
+      "eks:UntagResource",
+      "eks:ListTagsForResource",
+      "eks:CreateFargateProfile",
+      "eks:DeleteFargateProfile",
+      "eks:DescribeFargateProfile",
+      "eks:ListFargateProfiles",
+      "eks:CreateNodegroup",
+      "eks:DeleteNodegroup",
+      "eks:DescribeNodegroup",
+      "eks:ListNodegroups",
+      "eks:UpdateNodegroupConfig",
+      "eks:UpdateNodegroupVersion",
+      "iam:AddRoleToInstanceProfile",
+      "iam:AttachRolePolicy",
+      "iam:CreateInstanceProfile",
+      "iam:CreateOpenIDConnectProvider",
+      "iam:CreateServiceLinkedRole",
+      "iam:CreatePolicy",
+      "iam:CreatePolicyVersion",
+      "iam:CreateRole",
+      "iam:DeleteInstanceProfile",
+      "iam:DeleteOpenIDConnectProvider",
+      "iam:DeletePolicy",
+      "iam:DeleteRole",
+      "iam:DeleteRolePolicy",
+      "iam:DeleteServiceLinkedRole",
+      "iam:DetachRolePolicy",
+      "iam:GetInstanceProfile",
+      "iam:GetOpenIDConnectProvider",
+      "iam:GetPolicy",
+      "iam:GetPolicyVersion",
+      "iam:GetRole",
+      "iam:GetRolePolicy",
+      "iam:List*",
+      "iam:PassRole",
+      "iam:PutRolePolicy",
+      "iam:RemoveRoleFromInstanceProfile",
+      "iam:TagRole",
+      "iam:UntagRole",
+      "iam:UpdateAssumeRolePolicy",
+      // Following permissions are needed if cluster_enabled_log_types is enabled
+      "logs:CreateLogGroup",
+      "logs:DescribeLogGroups",
+      "logs:DeleteLogGroup",
+      "logs:ListTagsLogGroup",
+      "logs:PutRetentionPolicy",
+      // Following permissions for working with secrets_encryption example
+      "kms:CreateGrant",
+      "kms:CreateKey",
+      "kms:DescribeKey",
+      "kms:GetKeyPolicy",
+      "kms:GetKeyRotationStatus",
+      "kms:ListResourceTags",
+      "kms:ScheduleKeyDeletion"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "create_eks_cluster" {
+  name   = "${local.identifier}-create-eks-cluster-${data.aws_region.current.name}"
+  policy = data.aws_iam_policy_document.create_eks_cluster.json
 }

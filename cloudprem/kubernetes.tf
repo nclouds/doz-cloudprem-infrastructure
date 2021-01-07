@@ -1,6 +1,8 @@
 module "container_insights" {
   source = "./modules/container-insights"
 
+  depends_on = [module.eks_cluster]
+
   cluster_name = module.eks_cluster.cluster_id
 
   region_name = data.aws_region.current.name
@@ -9,10 +11,15 @@ module "container_insights" {
 module "replicated" {
   source = "./modules/replicated"
 
+  depends_on = [module.eks_cluster]
+
   dozuki_license_parameter_name = var.dozuki_license_parameter_name
 }
 
 resource "kubernetes_config_map" "dozuki_resources" {
+
+  depends_on = [module.eks_cluster]
+
   metadata {
     name      = "dozuki-resources-configmap"
     namespace = "default"
