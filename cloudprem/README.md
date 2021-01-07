@@ -11,21 +11,21 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.14 |
-| aws | >= 3.5 |
-| helm | ~> 2.0.1 |
-| kubernetes | ~> 1.13.3 |
-| random | ~> 3.0.0 |
+| terraform | ~> 0.14 |
+| aws | 3.22.0 |
+| helm | 2.0.1 |
+| kubernetes | 1.13.3 |
+| random | 3.0.0 |
 | time | 0.6.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.5 |
-| aws.eks | >= 3.5 |
-| kubernetes | ~> 1.13.3 |
-| random | ~> 3.0.0 |
+| aws | 3.22.0 |
+| aws.eks | 3.22.0 |
+| kubernetes | 1.13.3 |
+| random | 3.0.0 |
 | time | 0.6.0 |
 
 ## Inputs

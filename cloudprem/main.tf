@@ -1,13 +1,13 @@
 terraform {
   backend "s3" {}
 
-  required_version = ">= 0.14"
+  required_version = "~> 0.14"
 
   required_providers {
-    aws        = ">= 3.5"
-    random     = "~> 3.0.0"
-    kubernetes = "~> 1.13.3"
-    helm       = "~> 2.0.1"
+    aws        = "3.22.0"
+    random     = "3.0.0"
+    kubernetes = "1.13.3"
+    helm       = "2.0.1"
     time       = "0.6.0"
   }
 }
