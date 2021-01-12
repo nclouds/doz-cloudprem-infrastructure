@@ -144,6 +144,7 @@ spec:
               mountPath: /host/var/run/docker.sock
             - name: replicated-conf
               mountPath: /host/etc/replicated.conf
+              subPath: replicated.conf
             - name: proc
               mountPath: /host/proc
               readOnly: true
@@ -192,8 +193,8 @@ spec:
           hostPath:
             path: /var/run/docker.sock
         - name: replicated-conf
-          hostPath:
-            path: /etc/replicated.conf
+          configMap:
+            name: '{{ .Values.replicated_conf }}'
         - name: proc
           hostPath:
             path: /proc
