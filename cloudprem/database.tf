@@ -82,6 +82,8 @@ module "primary_database" {
 
 resource "aws_secretsmanager_secret" "primary_database_credentials" {
   name = "${local.identifier}-database"
+
+  recovery_window_in_days = local.protect_resources ? 7 : 0
 }
 
 resource "aws_secretsmanager_secret_version" "primary_database_credentials" {
@@ -179,6 +181,8 @@ resource "aws_secretsmanager_secret" "replica_database" {
   count = var.enable_bi ? 1 : 0
 
   name = "${local.identifier}-replica-database"
+
+  recovery_window_in_days = local.protect_resources ? 7 : 0
 }
 
 resource "aws_secretsmanager_secret_version" "replica_database" {
