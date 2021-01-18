@@ -144,17 +144,26 @@ spec:
               mountPath: /host/var/run/docker.sock
             - name: replicated-conf
               mountPath: /host/etc/replicated.conf
-              subPath: replicated.conf
             - name: proc
               mountPath: /host/proc
               readOnly: true
             - name: replicated-license
               mountPath: /tmp/license.rli
               subPath: license.rli
+            - name: load-license
+              mountPath: /tmp/load.sh
+              subPath: load.sh
           resources:
             requests:
               cpu: 250m
               memory: 256Mi
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - /tmp/load.sh
         - name: replicated-ui
           image: "quay.io/replicated/replicated-ui:stable-2.40.4"
           imagePullPolicy: IfNotPresent
@@ -193,14 +202,18 @@ spec:
           hostPath:
             path: /var/run/docker.sock
         - name: replicated-conf
-          configMap:
-            name: '{{ .Values.replicated_conf }}'
+          hostPath:
+            path: /etc/replicated.conf
         - name: proc
           hostPath:
             path: /proc
         - name: replicated-license
           secret:
             secretName: '{{ .Values.license_secret }}'
+        - name: load-license
+          configMap:
+            name: load-license
+            defaultMode: 0777
 ---
 apiVersion: v1
 kind: Service

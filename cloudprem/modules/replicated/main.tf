@@ -11,9 +11,4 @@ resource "helm_release" "replicated" {
     name  = "license_secret"
     value = kubernetes_secret.replicated_license.metadata.0.name
   }
-
-  set {
-    name  = "replicated_conf"
-    value = kubernetes_config_map.replicated_config.metadata.0.name
-  }
 }
