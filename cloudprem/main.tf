@@ -83,7 +83,7 @@ module "vpc" {
   azs  = slice(data.aws_availability_zones.available.names, 0, 3)
 
   enable_nat_gateway     = true
-  single_nat_gateway     = ! var.highly_available_nat_gateway
+  single_nat_gateway     = !var.highly_available_nat_gateway
   one_nat_gateway_per_az = true
   enable_dns_hostnames   = true
 
@@ -114,7 +114,7 @@ module "guide_images_s3_bucket" {
 
   bucket        = "dozuki-guide-images-${local.identifier}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
-  force_destroy = ! local.protect_resources
+  force_destroy = !local.protect_resources
 
   # S3 bucket-level Public Access Block configuration
   block_public_acls   = true
@@ -140,7 +140,7 @@ module "guide_pdfs_s3_bucket" {
 
   bucket        = "dozuki-guide-pdfs-${local.identifier}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
-  force_destroy = ! local.protect_resources
+  force_destroy = !local.protect_resources
 
   # S3 bucket-level Public Access Block configuration
   block_public_acls   = true
@@ -166,7 +166,7 @@ module "guide_objects_s3_bucket" {
 
   bucket        = "dozuki-guide-objects-${local.identifier}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
-  force_destroy = ! local.protect_resources
+  force_destroy = !local.protect_resources
 
   # S3 bucket-level Public Access Block configuration
   block_public_acls   = true
@@ -192,7 +192,7 @@ module "documents_s3_bucket" {
 
   bucket        = "dozuki-documents-${local.identifier}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
-  force_destroy = ! local.protect_resources
+  force_destroy = !local.protect_resources
 
   # S3 bucket-level Public Access Block configuration
   block_public_acls   = true

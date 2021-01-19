@@ -29,7 +29,7 @@ module "bastion_role" {
 
   create_role = true
 
-  role_name               = "${local.identifier}-bastion"
+  role_name               = "${local.identifier}-${data.aws_region.current.name}-bastion"
   role_requires_mfa       = false
   create_instance_profile = true
   attach_admin_policy     = true # TODO review policy

@@ -43,7 +43,7 @@ module "cluster_access_role" {
 
   create_role = true
 
-  role_name              = "${local.identifier}-cluster-access"
+  role_name              = "${local.identifier}-${data.aws_region.current.name}-cluster-access"
   attach_readonly_policy = true
   role_requires_mfa      = false
 
@@ -155,7 +155,7 @@ module "eks_cluster" {
   vpc_id  = local.vpc_id
   subnets = local.private_subnet_ids
 
-  workers_role_name = "${local.identifier}-worker"
+  workers_role_name = "${local.identifier}-${data.aws_region.current.name}-worker"
 
   workers_additional_policies = [
     aws_iam_policy.eks_worker.arn,
@@ -212,7 +212,7 @@ module "nlb" {
   name = local.identifier
 
   load_balancer_type = "network"
-  internal           = ! var.public_access
+  internal           = !var.public_access
 
   vpc_id  = local.vpc_id
   subnets = local.public_subnet_ids
@@ -392,13 +392,14 @@ resource "time_sleep" "wait_create_eks_cluster_role" {
 }
 
 # Role for the provider to create the EKS cluster
+# Don't change this role or it may cause issues with the EKS clusters
 module "create_eks_cluster" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
   version = "3.6.0"
 
   create_role = true
 
-  role_name         = "${local.identifier}-create-eks-cluster"
+  role_name         = "${local.identifier}-${data.aws_region.current.name}-create-eks-cluster"
   role_requires_mfa = false
 
   trusted_role_arns = [

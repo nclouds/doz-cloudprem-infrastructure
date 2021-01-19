@@ -53,7 +53,7 @@ module "primary_database" {
   # Snapshot configuration
   deletion_protection       = local.protect_resources
   snapshot_identifier       = var.rds_snapshot_identifier # Restore from snapshot
-  skip_final_snapshot       = ! local.protect_resources
+  skip_final_snapshot       = !local.protect_resources
   final_snapshot_identifier = local.identifier # Snapshot name upon DB deletion
   copy_tags_to_snapshot     = true
 
@@ -138,7 +138,7 @@ module "replica_database" {
 
   # Snapshot configuration
   deletion_protection       = local.protect_resources
-  skip_final_snapshot       = ! local.protect_resources
+  skip_final_snapshot       = !local.protect_resources
   final_snapshot_identifier = "${local.identifier}-replica" # Snapshot name upon DB deletion
   copy_tags_to_snapshot     = true
 
