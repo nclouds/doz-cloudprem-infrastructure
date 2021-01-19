@@ -112,7 +112,7 @@ module "guide_images_s3_bucket" {
 
   count = var.create_s3_buckets ? 1 : 0
 
-  bucket        = "dozuki-guide-images-${local.identifier}-${data.aws_caller_identity.current.account_id}"
+  bucket        = "dozuki-guide-images-${local.identifier}-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = !local.protect_resources
 
@@ -138,7 +138,7 @@ module "guide_pdfs_s3_bucket" {
 
   count = var.create_s3_buckets ? 1 : 0
 
-  bucket        = "dozuki-guide-pdfs-${local.identifier}-${data.aws_caller_identity.current.account_id}"
+  bucket        = "dozuki-guide-pdfs-${local.identifier}-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = !local.protect_resources
 
@@ -164,7 +164,7 @@ module "guide_objects_s3_bucket" {
 
   count = var.create_s3_buckets ? 1 : 0
 
-  bucket        = "dozuki-guide-objects-${local.identifier}-${data.aws_caller_identity.current.account_id}"
+  bucket        = "dozuki-guide-objects-${local.identifier}-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = !local.protect_resources
 
@@ -190,7 +190,7 @@ module "documents_s3_bucket" {
 
   count = var.create_s3_buckets ? 1 : 0
 
-  bucket        = "dozuki-documents-${local.identifier}-${data.aws_caller_identity.current.account_id}"
+  bucket        = "dozuki-documents-${local.identifier}-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = !local.protect_resources
 
