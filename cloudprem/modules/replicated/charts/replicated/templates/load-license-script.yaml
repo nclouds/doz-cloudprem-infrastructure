@@ -6,7 +6,7 @@ data:
   load.sh: |-
     #!/bin/bash
     retries=0
-    while ! true; do 
+    while ! replicatedctl system status; do 
       echo waiting for replicated to be initialized. $((++retries)) of 20
       sleep 10
       if [ $retries -eq  20 ]; then
