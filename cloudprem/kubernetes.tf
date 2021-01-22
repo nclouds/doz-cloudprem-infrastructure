@@ -82,27 +82,27 @@ resource "kubernetes_config_map" "dozuki_resources" {
     "db.json" = <<-EOF
       {
         "generic": {
-          "hostname": "${module.primary_database.this_db_instance_endpoint}",
-          "user": "dozuki",
-          "password": "REDACTED",
+          "hostname": "${module.primary_database.this_db_instance_address}",
+          "user": "${module.primary_database.this_db_instance_username}",
+          "password": "${random_password.primary_database.result}",
           "CAFile": "/etc/dozuki/rds-ca.pem"
         },
         "master": {
-          "hostname": "${module.primary_database.this_db_instance_endpoint}",
-          "user": "dozuki",
-          "password": "REDACTED",
+          "hostname": "${module.primary_database.this_db_instance_address}",
+          "user": "${module.primary_database.this_db_instance_username}",
+          "password": "${random_password.primary_database.result}",
           "CAFile": "/etc/dozuki/rds-ca.pem"
         },
         "slave": {
-          "hostname": "${module.primary_database.this_db_instance_endpoint}",
-          "user": "dozuki",
-          "password": "REDACTED",
+          "hostname": "${module.primary_database.this_db_instance_address}",
+          "user": "${module.primary_database.this_db_instance_username}",
+          "password": "${random_password.primary_database.result}",
           "CAFile": "/etc/dozuki/rds-ca.pem"
         },
         "sphinx": {
-          "hostname": "${module.primary_database.this_db_instance_endpoint}",
-          "user": "dozuki",
-          "password": "REDACTED",
+          "hostname": "${module.primary_database.this_db_instance_address}",
+          "user": "${module.primary_database.this_db_instance_username}",
+          "password": "${random_password.primary_database.result}",
           "CAFile": "/etc/dozuki/rds-ca.pem"
         }
       }
