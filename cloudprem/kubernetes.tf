@@ -13,7 +13,7 @@ module "replicated" {
 
   depends_on = [module.eks_cluster]
 
-  dozuki_license_parameter_name = var.dozuki_license_parameter_name
+  dozuki_license_parameter_name = local.dozuki_license_parameter_name
 }
 
 resource "kubernetes_config_map" "dozuki_resources" {

@@ -21,7 +21,9 @@ provider "aws" {
 #  ############# Locals ############
 
 locals {
-  identifier = "cloudprem-${var.environment}"
+  identifier = var.identifier == "" ? "cloudprem-${var.environment}" : "${var.identifier}-cloudprem-${var.environment}"
+
+  dozuki_license_parameter_name = var.dozuki_license_parameter_name != "" ? var.dozuki_license_parameter_name : var.identifier == "" ? "/cloudprem/${var.environment}/license" : "/${var.identifier}/cloudprem/${var.environment}/license"
 
   tags = {
     Terraform = "true"

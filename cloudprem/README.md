@@ -37,7 +37,7 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | bastion\_instance\_type | The instance type to use for the bastion host | `string` | `"t3.micro"` | no |
 | cache\_instance\_type | The compute and memory capacity of the nodes in the Cache Cluster | `string` | `"cache.t2.small"` | no |
 | create\_s3\_buckets | Wheter to create the dozuki S3 buckets or not. | `bool` | `true` | no |
-| dozuki\_license\_parameter\_name | The SSM parameter name that stores the Dozuki license file provided to you. | `string` | `"/cloudprem/dev/license"` | no |
+| dozuki\_license\_parameter\_name | The SSM parameter name that stores the Dozuki license file provided to you. If empty Terraform will attempt to get the license from a parameter with name /${identifier}/cloudprem/${environment}/license or /cloudprem/${environment}/license if identifier is not set. | `string` | `""` | no |
 | eks\_desired\_capacity | This is what the node count will start out as. | `number` | `"4"` | no |
 | eks\_instance\_type | The instance type of each node in the application's EKS worker node group. | `string` | `"t3.medium"` | no |
 | eks\_max\_size | The maximum amount of nodes we will autoscale to. | `number` | `"4"` | no |
@@ -47,6 +47,7 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | enable\_bi | This option will spin up a BI slave of your master database and enable conditional replication (everything but the mysql table will be replicated so you can have custom users). | `bool` | `true` | no |
 | environment | Environment of the application | `string` | `"dev"` | no |
 | highly\_available\_nat\_gateway | Should be true if you want to provision a highly available NAT Gateway across all of your private networks | `bool` | `false` | no |
+| identifier | A name identifier to use as prefix for all the resources. | `string` | `""` | no |
 | public\_access | Should the app and dashboard be accessible via a publicly routable IP and domain? | `bool` | `true` | no |
 | rds\_allocated\_storage | The initial size of the database (Gb) | `number` | `100` | no |
 | rds\_backup\_retention\_period | The number of days to keep automatic database backups. Setting this value to 0 disables automatic backups. | `number` | `30` | no |

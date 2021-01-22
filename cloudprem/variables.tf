@@ -195,10 +195,16 @@ variable "bastion_instance_type" {
 
 # --- BEGIN General Configuration --- #
 
-variable "dozuki_license_parameter_name" {
-  description = "The SSM parameter name that stores the Dozuki license file provided to you."
+variable "identifier" {
+  description = "A name identifier to use as prefix for all the resources."
   type        = string
-  default     = "/cloudprem/dev/license"
+  default     = ""
+}
+
+variable "dozuki_license_parameter_name" {
+  description = "The SSM parameter name that stores the Dozuki license file provided to you. If empty Terraform will attempt to get the license from a parameter with name /$${identifier}/cloudprem/$${environment}/license or /cloudprem/$${environment}/license if identifier is not set."
+  type        = string
+  default     = ""
 }
 
 variable "region" {
