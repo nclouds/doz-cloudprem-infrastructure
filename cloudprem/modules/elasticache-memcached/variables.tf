@@ -18,7 +18,7 @@ variable "subnet_ids" {
 variable "create_security_group" {
   type        = bool
   description = "Flag to enable/disable creation of Security Group in the module."
-  default     = false
+  default     = true
 }
 
 variable "existing_security_groups" {

@@ -43,7 +43,7 @@ module "memcached" {
 | allowed\_cidr\_blocks | List of CIDR blocks that are allowed ingress to the cluster's Security Group created in the module | `list(string)` | `[]` | no |
 | allowed\_security\_groups | List of Security Group IDs that are allowed ingress to the cluster's Security Group created in the module | `list(string)` | `[]` | no |
 | cluster\_size | Cluster size | `number` | `1` | no |
-| create\_security\_group | Flag to enable/disable creation of Security Group in the module. | `bool` | `false` | no |
+| create\_security\_group | Flag to enable/disable creation of Security Group in the module. | `bool` | `true` | no |
 | elasticache\_parameter\_group\_family | ElastiCache parameter group family | `string` | `"memcached1.5"` | no |
 | elasticache\_subnet\_group\_name | Subnet group name for the ElastiCache instance | `string` | `""` | no |
 | engine\_version | Memcached engine version. For more info, see https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/supported-engine-versions.html | `string` | `"1.5.16"` | no |
@@ -63,6 +63,7 @@ module "memcached" {
 | cluster\_configuration\_endpoint | Cluster configuration endpoint |
 | cluster\_id | Cluster ID |
 | cluster\_urls | Cluster URLs |
+| port | Cluster endpoint port |
 | security\_group\_id | Security Group ID |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

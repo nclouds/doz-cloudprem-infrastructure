@@ -1,5 +1,5 @@
 resource "aws_security_group" "this" {
-  count = var.create_security_group == true ? 1 : 0
+  count = var.create_security_group ? 1 : 0
 
   name        = "${var.name}-elasticache"
   description = "Elasticache memcached SG. Allows access on the ${var.port} port"
@@ -18,7 +18,7 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_security_group_rule" "egress" {
-  count             = var.create_security_group == true ? 1 : 0
+  count             = var.create_security_group ? 1 : 0
   description       = "Allow all egress traffic"
   from_port         = 0
   to_port           = 0
@@ -29,7 +29,7 @@ resource "aws_security_group_rule" "egress" {
 }
 
 resource "aws_security_group_rule" "ingress_security_groups" {
-  count                    = var.create_security_group == true ? 1 : 0
+  count                    = var.create_security_group ? length(var.allowed_security_groups) : 0
   description              = "Allow inbound traffic from existing Security Groups"
   from_port                = var.port
   to_port                  = var.port
@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "ingress_security_groups" {
 }
 
 resource "aws_security_group_rule" "ingress_cidr_blocks" {
-  count             = var.create_security_group == true ? 1 : 0
+  count             = var.create_security_group ? 1 : 0
   description       = "Allow inbound traffic from CIDR blocks"
   from_port         = var.port
   to_port           = var.port
