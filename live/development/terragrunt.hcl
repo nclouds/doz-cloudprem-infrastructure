@@ -12,9 +12,5 @@ terraform {
 inputs = {
   region = "us-west-2"
 
-  vpc_cidr = "172.16.0.0/16"
-
-  dozuki_license_parameter_name = "/cloudprem/dev/license"
-
   environment = "dev"
 }
