@@ -26,8 +26,10 @@ locals {
   dozuki_license_parameter_name = var.dozuki_license_parameter_name != "" ? var.dozuki_license_parameter_name : var.identifier == "" ? "/cloudprem/${var.environment}/license" : "/${var.identifier}/cloudprem/${var.environment}/license"
 
   tags = {
-    Terraform = "true"
-    Project   = "cloudprem"
+    Terraform   = "true"
+    Project     = "cloudprem"
+    Identifier  = var.identifier
+    Environment = var.environment
   }
 
   protect_resources = false #var.stack_type == "prod" ? true : false
@@ -114,7 +116,7 @@ module "guide_images_s3_bucket" {
 
   count = var.create_s3_buckets ? 1 : 0
 
-  bucket        = "dozuki-guide-images-${local.identifier}-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
+  bucket_prefix = "dozuki-guide-images"
   acl           = "private"
   force_destroy = !local.protect_resources
 
@@ -140,7 +142,7 @@ module "guide_pdfs_s3_bucket" {
 
   count = var.create_s3_buckets ? 1 : 0
 
-  bucket        = "dozuki-guide-pdfs-${local.identifier}-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
+  bucket_prefix = "dozuki-guide-pdfs"
   acl           = "private"
   force_destroy = !local.protect_resources
 
@@ -166,7 +168,7 @@ module "guide_objects_s3_bucket" {
 
   count = var.create_s3_buckets ? 1 : 0
 
-  bucket        = "dozuki-guide-objects-${local.identifier}-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
+  bucket_prefix = "dozuki-guide-objects"
   acl           = "private"
   force_destroy = !local.protect_resources
 
@@ -192,7 +194,7 @@ module "documents_s3_bucket" {
 
   count = var.create_s3_buckets ? 1 : 0
 
-  bucket        = "dozuki-documents-${local.identifier}-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
+  bucket_prefix = "dozuki-documents"
   acl           = "private"
   force_destroy = !local.protect_resources
 

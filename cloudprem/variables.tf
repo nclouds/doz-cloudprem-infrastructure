@@ -199,12 +199,23 @@ variable "identifier" {
   description = "A name identifier to use as prefix for all the resources."
   type        = string
   default     = ""
+
+  validation {
+    condition     = length(var.identifier) <= 10
+    error_message = "The length of the identifier must be less than 11 characters."
+  }
 }
 
 variable "dozuki_license_parameter_name" {
   description = "The SSM parameter name that stores the Dozuki license file provided to you. If empty Terraform will attempt to get the license from a parameter with name /$${identifier}/cloudprem/$${environment}/license or /cloudprem/$${environment}/license if identifier is not set."
   type        = string
   default     = ""
+}
+
+variable "create_deployment_role" {
+  description = "Create a role to be able to deploy the Terraform stack manually, otherwise the stack can only be managed through the pipeline."
+  type        = bool
+  default     = true
 }
 
 variable "region" {
@@ -217,4 +228,9 @@ variable "environment" {
   description = "Environment of the application"
   type        = string
   default     = "dev"
+
+  validation {
+    condition     = length(var.environment) <= 5
+    error_message = "The length of the Environment must be less than 6 characters."
+  }
 }

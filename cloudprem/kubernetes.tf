@@ -140,6 +140,8 @@ resource "kubernetes_config_map" "dozuki_resources" {
 
 resource "helm_release" "kubed" {
 
+  depends_on = [module.eks_cluster]
+
   name       = "kubed"
   repository = "https://charts.appscode.com/stable/"
   chart      = "kubed"
