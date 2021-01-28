@@ -35,7 +35,7 @@ module "bastion_role" {
   attach_admin_policy     = true # TODO review policy
 
   custom_role_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM",
+    "arn:${data.aws_partition.current.partition}:iam::${data.aws_partition.current.partition}:policy/service-role/AmazonEC2RoleforSSM",
   ]
 
   trusted_role_services = [

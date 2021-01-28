@@ -50,7 +50,7 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | public\_access | Should the app and dashboard be accessible via a publicly routable IP and domain? | `bool` | `true` | no |
 | rds\_allocated\_storage | The initial size of the database (Gb) | `number` | `100` | no |
 | rds\_backup\_retention\_period | The number of days to keep automatic database backups. Setting this value to 0 disables automatic backups. | `number` | `30` | no |
-| rds\_instance\_type | The instance type to use for your database. See this page for a breakdown of the performance and cost differences between the different instance types: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html | `string` | `"db.t3.small"` | no |
+| rds\_instance\_type | The instance type to use for your database. See this page for a breakdown of the performance and cost differences between the different instance types: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html | `string` | `"db.m4.large"` | no |
 | rds\_kms\_key\_id | AWS KMS key identifier for RDS encryption. The identifier can be one of the following format: Key id, key ARN, alias name or alias ARN | `string` | `"alias/aws/rds"` | no |
 | rds\_max\_allocated\_storage | The maximum size to which AWS will scale the database (Gb) | `number` | `500` | no |
 | rds\_multi\_az | If true we will tell RDS to automatically deploy and manage a highly available standby instance of your database. Enabling this doubles the cost of the RDS instance but without it you are susceptible to downtime if the AWS availability zone your RDS instance is in becomes unavailable. | `bool` | `true` | no |

@@ -33,7 +33,7 @@ module "cluster_access_role" {
   role_requires_mfa      = false
 
   trusted_role_arns = [
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+    "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root",
   ]
 
   tags = local.tags
@@ -55,7 +55,7 @@ module "deployment_role" {
   role_requires_mfa   = false
 
   trusted_role_arns = [
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+    "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root",
   ]
 
   tags = local.tags
@@ -69,7 +69,7 @@ data "aws_iam_policy_document" "eks_worker" {
     ]
 
     resources = [
-      "arn:aws:s3:::*",
+      "arn:${data.aws_partition.current.partition}:s3:::*",
     ]
   }
 
