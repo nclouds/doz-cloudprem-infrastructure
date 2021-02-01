@@ -268,6 +268,18 @@ resource "aws_dms_replication_task" "this" {
   replication_instance_arn = aws_dms_replication_instance.this[0].replication_instance_arn
   table_mappings           = "{ \"rules\": [ { \"rule-type\": \"selection\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"object-locator\": { \"schema-name\": \"%\", \"table-name\": \"%\" }, \"rule-action\": \"include\", \"filters\": [] }, { \"rule-type\": \"selection\", \"rule-id\": \"2\", \"rule-name\": \"2\", \"object-locator\": { \"schema-name\": \"mysql\", \"table-name\": \"%\" }, \"rule-action\": \"exclude\", \"filters\": [] }, { \"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": { \"schema-name\": \"performance_schema\", \"table-name\": \"%\" }, \"rule-action\": \"exclude\", \"filters\": [] } ] }"
 
+  replication_task_settings = <<-EOF
+    {
+      "TargetMetadata": {
+        "SupportLobs": true,
+        "FullLobMode": true,
+        "LobChunkSize": 64,
+        "LimitedSizeLobMode": false,
+        "LobMaxSize": 0
+      }
+    }
+  EOF
+
   source_endpoint_arn = aws_dms_endpoint.source[0].endpoint_arn
   target_endpoint_arn = aws_dms_endpoint.target[0].endpoint_arn
 
@@ -276,5 +288,14 @@ resource "aws_dms_replication_task" "this" {
   lifecycle {
     ignore_changes = [replication_task_settings]
   }
+}
 
+resource "null_resource" "start_replicating" {
+  triggers = {
+    dms_task_arn = aws_dms_replication_task.this.replication_task_arn
+  }
+  provisioner "local-exec" {
+    when    = create
+    command = "aws dms start-replication-task --start-replication-task-type start-replication --replication-task-arn ${self.triggers["dms_task_arn"]}"
+  }
 }

@@ -15,6 +15,7 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | aws | 3.22.0 |
 | helm | 2.0.1 |
 | kubernetes | 1.13.3 |
+| null | 3.0.0 |
 | random | 3.0.0 |
 | time | 0.6.0 |
 
@@ -25,6 +26,7 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | aws | 3.22.0 |
 | helm | 2.0.1 |
 | kubernetes | 1.13.3 |
+| null | 3.0.0 |
 | random | 3.0.0 |
 
 ## Inputs
