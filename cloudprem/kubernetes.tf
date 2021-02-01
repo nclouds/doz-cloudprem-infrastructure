@@ -108,7 +108,7 @@ resource "kubernetes_config_map" "dozuki_resources" {
       }
     EOF
 
-    "rds-ca.pem" = file("vendor/rds-ca-2019-root.pem")
+    "rds-ca.pem" = file(local.is_us_gov ? "vendor/rds-ca-${data.aws_region.current.name}-2017-root.pem" : "vendor/rds-ca-2019-root.pem")
 
     "index.json" = <<-EOF
       {

@@ -42,7 +42,8 @@ module "primary_database" {
   username = "dozuki"
   password = random_password.primary_database.result
 
-  multi_az = var.rds_multi_az
+  multi_az           = var.rds_multi_az
+  ca_cert_identifier = local.ca_cert_identifier
 
   maintenance_window      = "Sun:19:00-Sun:23:00"
   backup_window           = "17:00-19:00"
@@ -128,7 +129,8 @@ module "replica_database" {
   username = "dozuki"
   password = random_password.replica_database[0].result
 
-  multi_az = var.rds_multi_az
+  multi_az           = var.rds_multi_az
+  ca_cert_identifier = local.ca_cert_identifier
 
   maintenance_window = "Sun:19:00-Sun:23:00"
   backup_window      = "17:00-19:00"
@@ -215,7 +217,8 @@ resource "aws_dms_replication_instance" "this" {
   count = var.enable_bi ? 1 : 0
 
   replication_instance_id    = local.identifier
-  replication_instance_class = "dms.t2.medium"
+  replication_instance_class = "dms.r5.large"
+  engine_version             = "3.4.3"
   allocated_storage          = var.rds_allocated_storage
   # kms_key_arn                = data.aws_kms_key.rds.arn
 

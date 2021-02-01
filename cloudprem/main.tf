@@ -34,6 +34,8 @@ locals {
 
   protect_resources = false #var.stack_type == "prod" ? true : false
 
+  is_us_gov = data.aws_partition.current.partition == "aws-us-gov"
+
   # Networking
   azs_count          = 3
   create_vpc         = var.vpc_id == "" ? true : false
@@ -41,6 +43,9 @@ locals {
   vpc_cidr           = local.create_vpc ? module.vpc[0].vpc_cidr_block : module.vpc[0].vpc_cidr_block
   public_subnet_ids  = local.create_vpc ? module.vpc[0].public_subnets : data.aws_subnet_ids.public[0]
   private_subnet_ids = local.create_vpc ? module.vpc[0].private_subnets : data.aws_subnet_ids.private[0]
+
+  # Database
+  ca_cert_identifier = local.is_us_gov ? "rds-ca-2017" : "rds-ca-2019"
 
 }
 

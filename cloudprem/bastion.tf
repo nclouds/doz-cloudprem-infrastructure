@@ -32,10 +32,10 @@ module "bastion_role" {
   role_name               = "${local.identifier}-${data.aws_region.current.name}-bastion"
   role_requires_mfa       = false
   create_instance_profile = true
-  attach_admin_policy     = true # TODO review policy
 
   custom_role_policy_arns = [
     "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM",
+    "arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"
   ]
 
   trusted_role_services = [

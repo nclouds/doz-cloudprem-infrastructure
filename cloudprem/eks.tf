@@ -28,9 +28,8 @@ module "cluster_access_role" {
 
   create_role = true
 
-  role_name              = "${local.identifier}-${data.aws_region.current.name}-cluster-access"
-  attach_readonly_policy = true
-  role_requires_mfa      = false
+  role_name         = "${local.identifier}-${data.aws_region.current.name}-cluster-access"
+  role_requires_mfa = false
 
   trusted_role_arns = [
     "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root",
@@ -50,9 +49,10 @@ module "deployment_role" {
 
   create_role = true
 
-  role_name           = "${local.identifier}-${data.aws_region.current.name}-deployment"
-  attach_admin_policy = true
-  role_requires_mfa   = false
+  role_name         = "${local.identifier}-${data.aws_region.current.name}-deployment"
+  role_requires_mfa = false
+
+  custom_role_policy_arns = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"]
 
   trusted_role_arns = [
     "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root",
