@@ -291,6 +291,7 @@ resource "aws_dms_replication_task" "this" {
   }
 }
 
+# AWS provider issue to replace this https://github.com/hashicorp/terraform-provider-aws/issues/2083
 resource "null_resource" "start_replicating" {
   count = var.enable_bi ? 1 : 0
 
