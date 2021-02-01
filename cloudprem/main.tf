@@ -9,7 +9,7 @@ terraform {
     kubernetes = "1.13.3"
     helm       = "2.0.1"
     time       = "0.6.0"
-    null       = "3.0.0"
+    null       = "2.1.2"
   }
 }
 
