@@ -75,8 +75,8 @@ module "primary_database" {
   ]
 
   # DB option group
-  major_engine_version = "5.7"
-  # create_db_option_group = false # https://github.com/terraform-aws-modules/terraform-aws-rds/issues/188
+  option_group_name      = null
+  create_db_option_group = false # https://github.com/terraform-aws-modules/terraform-aws-rds/issues/188
 
   tags = local.tags
 }
@@ -161,8 +161,8 @@ module "replica_database" {
   ]
 
   # DB option group
-  major_engine_version = "5.7"
-  # create_db_option_group = false # https://github.com/terraform-aws-modules/terraform-aws-rds/issues/188
+  option_group_name      = null
+  create_db_option_group = false # https://github.com/terraform-aws-modules/terraform-aws-rds/issues/188
 
   # # DB subnet group
   # create_db_subnet_group = false
@@ -224,6 +224,8 @@ resource "aws_dms_replication_instance" "this" {
 
   publicly_accessible         = false
   replication_subnet_group_id = aws_dms_replication_subnet_group.this[0].id
+
+  # allow_major_version_upgrade = true
 
   vpc_security_group_ids = [module.database_sg.this_security_group_id]
 
