@@ -298,20 +298,20 @@ resource "aws_dms_replication_task" "this" {
 }
 
 # AWS provider issue to replace this https://github.com/hashicorp/terraform-provider-aws/issues/2083
-resource "null_resource" "start_replicating" {
-  count = var.enable_bi ? 1 : 0
+# resource "null_resource" "start_replicating" {
+#   count = var.enable_bi ? 1 : 0
 
-  triggers = {
-    dms_task_arn = aws_dms_replication_task.this[0].replication_task_arn
-  }
+#   triggers = {
+#     dms_task_arn = aws_dms_replication_task.this[0].replication_task_arn
+#   }
 
-  provisioner "local-exec" {
-    when    = create
-    command = "aws dms start-replication-task --start-replication-task-type start-replication --replication-task-arn ${self.triggers["dms_task_arn"]}"
-  }
+#   provisioner "local-exec" {
+#     when    = create
+#     command = "aws dms start-replication-task --start-replication-task-type start-replication --replication-task-arn ${self.triggers["dms_task_arn"]}"
+#   }
 
-  provisioner "local-exec" {
-    when    = destroy
-    command = "aws dms stop-replication-task --replication-task-arn ${self.triggers["dms_task_arn"]}"
-  }
-}
+#   provisioner "local-exec" {
+#     when    = destroy
+#     command = "aws dms stop-replication-task --replication-task-arn ${self.triggers["dms_task_arn"]}"
+#   }
+# }
