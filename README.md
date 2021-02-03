@@ -61,3 +61,13 @@ The repository is configured with two Github Workflows:
 
 1. Terraform: Performs validations using (terraform fmt, tflint and tfsec) for quality compliance. This CI pipeline is executed on every commit pushed github.
 2. Release: This workflow creates a github release of the Terraform project whenever a new tag of the form v* (i.e. v1.0, v20.15.10) is pushed to the repository. To control the Release notes and properties update the [release.yml](./.github/workflows/release.yml) file.
+
+#### Additional considerations
+
+By default only the user that creates the EKS cluster has permissions to access the cluster, for that reason if you create the Terraform stack with the pipeline and then try to update the stack manually you'll get an `Unauthorized` error when Terraform attempts to update or refresh the state of the kubernetes resources. To overcome that a role called *deployment_role* is created and added to the *aws_auth* configmap, granting it access to the cluster. 
+
+To perform manual updates to the infrastructure after deploying it with the pipeline get the role arn from the Terraform outputs and execute the command with the following flag:
+
+```console
+terragrunt apply --terragrunt-iam-role <role_arn>
+```
