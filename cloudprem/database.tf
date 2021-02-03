@@ -28,6 +28,8 @@ module "primary_database" {
   source  = "terraform-aws-modules/rds/aws"
   version = "2.20.0"
 
+  depends_on = [module.vpc]
+
   identifier = local.identifier
 
   engine                = "mysql"
@@ -114,6 +116,8 @@ module "replica_database" {
   version = "2.20.0"
 
   count = var.enable_bi ? 1 : 0
+
+  depends_on = [module.vpc]
 
   identifier = "${local.identifier}-replica"
 

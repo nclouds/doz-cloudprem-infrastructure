@@ -49,6 +49,8 @@ module "bastion" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "3.8.0"
 
+  depends_on = [module.vpc]
+
   name = "${local.identifier}-bastion"
 
   iam_instance_profile = module.bastion_role.this_iam_instance_profile_arn

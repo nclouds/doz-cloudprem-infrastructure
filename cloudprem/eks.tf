@@ -150,6 +150,8 @@ module "eks_cluster" {
   source  = "terraform-aws-modules/eks/aws"
   version = "13.2.1"
 
+  depends_on = [module.vpc]
+
   # EKS cofigurations
   cluster_name    = local.identifier
   cluster_version = "1.18"
