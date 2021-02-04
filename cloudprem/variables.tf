@@ -212,12 +212,6 @@ variable "dozuki_license_parameter_name" {
   default     = ""
 }
 
-variable "create_deployment_role" {
-  description = "Create a role to be able to deploy the Terraform stack manually, otherwise the stack can only be managed through the pipeline."
-  type        = bool
-  default     = true
-}
-
 variable "region" {
   description = "The region where the resources will be deployed"
   type        = string

@@ -34,7 +34,6 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | app\_access\_cidr | This CIDR will be allowed to connect to Dozuki. If running a public site, use the default value. Otherwise you probably want to lock this down to the VPC or your VPN CIDR. | `string` | `"0.0.0.0/0"` | no |
 | bastion\_instance\_type | The instance type to use for the bastion host | `string` | `"t3.micro"` | no |
 | cache\_instance\_type | The compute and memory capacity of the nodes in the Cache Cluster | `string` | `"cache.t2.small"` | no |
-| create\_deployment\_role | Create a role to be able to deploy the Terraform stack manually, otherwise the stack can only be managed through the pipeline. | `bool` | `true` | no |
 | create\_s3\_buckets | Wheter to create the dozuki S3 buckets or not. | `bool` | `true` | no |
 | dozuki\_license\_parameter\_name | The SSM parameter name that stores the Dozuki license file provided to you. If empty Terraform will attempt to get the license from a parameter with name /${identifier}/cloudprem/${environment}/license or /cloudprem/${environment}/license if identifier is not set. | `string` | `""` | no |
 | eks\_desired\_capacity | This is what the node count will start out as. | `number` | `"4"` | no |
@@ -66,7 +65,6 @@ The terraform stack is composed of many of the [open source AWS modules](https:/
 | Name | Description |
 |------|-------------|
 | dashboard\_url | URL to your Dozuki Dashboard. |
-| deployment\_role | AWS IAM role to assume to deploy this Terraform stack. |
 | dozuki\_url | URL to your Dozuki Installation. |
 | eks\_cluster\_access\_role | AWS IAM role with full access to the Kubernetes cluster. |
 

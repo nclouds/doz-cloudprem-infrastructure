@@ -38,29 +38,6 @@ module "cluster_access_role" {
   tags = local.tags
 }
 
-# IAM role to deploy the Terraform stack. By default only the user that creates the cluster has access to it
-# If you deploy the stack with the pipeline and want to troubleshoot or deploy the stack with another user
-# you need to assume this role
-module "deployment_role" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
-  version = "3.6.0"
-
-  count = var.create_deployment_role ? 1 : 0
-
-  create_role = true
-
-  role_name         = "${local.identifier}-${data.aws_region.current.name}-deployment"
-  role_requires_mfa = false
-
-  custom_role_policy_arns = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/AdministratorAccess"]
-
-  trusted_role_arns = [
-    "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root",
-  ]
-
-  tags = local.tags
-}
-
 data "aws_iam_policy_document" "eks_worker" {
   statement {
     actions = [
@@ -205,11 +182,6 @@ module "eks_cluster" {
       username = "admin"
       groups   = ["system:masters"]
     },
-    var.create_deployment_role ? {
-      rolearn  = module.deployment_role[0].this_iam_role_arn
-      username = "deployment"
-      groups   = ["system:masters"]
-    } : null
   ]
 
   tags = local.tags
