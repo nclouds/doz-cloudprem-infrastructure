@@ -64,10 +64,16 @@ The repository is configured with two Github Workflows:
 
 #### Additional considerations
 
-By default only the user that creates the EKS cluster has permissions to access the cluster, for that reason if you create the Terraform stack with the pipeline and then try to update the stack manually you'll get an `Unauthorized` error when Terraform attempts to update or refresh the state of the kubernetes resources. To overcome that a role called *deployment_role* is created and added to the *aws_auth* configmap, granting it access to the cluster. 
+By default only the user that creates the EKS cluster has permissions to access the cluster, for that reason if you create the Terraform stack with the pipeline and then try to update the stack manually you'll get an `Unauthorized` error when Terraform attempts to update or refresh the state of the kubernetes resources. To overcome that a role called *deployment_role* is created as part of the pipeline and used to deploy the infrastructure.
 
-To perform manual updates to the infrastructure after deploying it with the pipeline get the role arn from the Terraform outputs and execute the command with the following flag:
+To perform manual updates to the infrastructure after deploying it with the pipeline get the deployment role arn from the CloudFormation pipeline and assume the role:
 
 ```console
-terragrunt apply --terragrunt-iam-role <role_arn>
+aws_credentials=$(aws sts assume-role --role-arn <deployment_role_arn> --role-session-name "Terraform")
+export AWS_ACCESS_KEY_ID=$(echo $aws_credentials|jq '.Credentials.AccessKeyId'|tr -d '"')
+export AWS_SECRET_ACCESS_KEY=$(echo $aws_credentials|jq '.Credentials.SecretAccessKey'|tr -d '"')
+export AWS_SESSION_TOKEN=$(echo $aws_credentials|jq '.Credentials.SessionToken'|tr -d '"')
+terragrunt apply
 ```
+
+Note that the role session name is Terraform, you must use the exact same session name to perform updates.
