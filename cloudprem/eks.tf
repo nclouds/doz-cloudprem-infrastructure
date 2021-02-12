@@ -87,45 +87,9 @@ resource "aws_iam_policy" "eks_worker" {
   policy = data.aws_iam_policy_document.eks_worker.json
 }
 
-module "eks_worker_node_sg" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "3.17.0"
-
-  name            = "${local.identifier}-worker-node"
-  use_name_prefix = false
-  description     = "Allows access to the worker nodes to expose the Cloudprem application"
-  vpc_id          = local.vpc_id
-
-  ingress_with_cidr_blocks = [
-    {
-      from_port   = 32001
-      to_port     = 32001
-      protocol    = 6
-      description = "Allow internet access to the replicated-ui"
-      cidr_blocks = var.replicated_ui_access_cidr
-    },
-    {
-      from_port   = 32005
-      to_port     = 32005
-      protocol    = 6
-      description = " Allow internet access to the app via https"
-      cidr_blocks = var.app_access_cidr
-    },
-    {
-      from_port   = 32010
-      to_port     = 32010
-      protocol    = 6
-      description = "Allow internet access to the app via http"
-      cidr_blocks = var.app_access_cidr
-    },
-  ]
-
-  egress_rules = ["all-tcp"]
-}
-
 module "eks_cluster" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "13.2.1"
+  version = "14.0.0"
 
   depends_on = [module.vpc]
 
@@ -143,35 +107,26 @@ module "eks_cluster" {
     aws_iam_policy.eks_worker.arn,
   ]
 
-  worker_additional_security_group_ids = [
-    module.eks_worker_node_sg.this_security_group_id
-  ]
+  node_groups_defaults = {
+    instance_types = [var.eks_instance_type]
+    disk_size      = var.eks_volume_size
+  }
 
-  worker_groups = [
-    {
-      name                 = "workers"
-      instance_type        = var.eks_instance_type
-      root_volume_size     = var.eks_volume_size
-      asg_min_size         = var.eks_min_size
-      asg_max_size         = var.eks_max_size
-      asg_desired_capacity = var.eks_desired_capacity
-      subnets              = local.private_subnet_ids
-      enabled_metrics      = ["GroupInServiceInstances"]
-      target_group_arns    = module.nlb.target_group_arns
-      tags = [
-        {
-          "key"                 = "k8s.io/cluster-autoscaler/enabled"
-          "propagate_at_launch" = "true"
-          "value"               = "true"
-        },
-        {
-          "key"                 = "k8s.io/cluster-autoscaler/${local.identifier}"
-          "propagate_at_launch" = "true"
-          "value"               = "owned"
-        }
-      ]
+  node_groups = {
+    workers = {
+      desired_capacity = var.eks_desired_capacity
+      max_capacity     = var.eks_max_size
+      min_capacity     = var.eks_min_size
+
+      k8s_labels = {
+        Environment = var.environment
+      }
+
+      additional_tags = {
+        Environment = var.environment
+      }
     }
-  ]
+  }
 
   # Kubernetes configurations
   write_kubeconfig = false
@@ -185,6 +140,47 @@ module "eks_cluster" {
   ]
 
   tags = local.tags
+}
+
+resource "null_resource" "managed_node_asg_nlb_attach" { # TODO Remove when feature is added https://github.com/aws/containers-roadmap/issues/709
+
+  triggers = {
+    asg = module.eks_cluster.node_groups["workers"].resources[0].autoscaling_groups[0].name
+  }
+
+  provisioner "local-exec" {
+    command = "aws autoscaling attach-load-balancer-target-groups --auto-scaling-group-name '${module.eks_cluster.node_groups["workers"].resources[0].autoscaling_groups[0].name}' --target-group-arns ${join(" ", module.nlb.target_group_arns)}"
+  }
+}
+
+resource "aws_security_group_rule" "replicated_ui_access" {
+  type              = "ingress"
+  from_port         = 32001
+  to_port           = 32001
+  protocol          = "tcp"
+  cidr_blocks       = [var.replicated_ui_access_cidr] #tfsec:ignore:AWS006
+  security_group_id = module.eks_cluster.cluster_primary_security_group_id
+  description       = "Access to the replicated UI"
+}
+
+resource "aws_security_group_rule" "app_access_https" {
+  type              = "ingress"
+  from_port         = 32005
+  to_port           = 32005
+  protocol          = "tcp"
+  cidr_blocks       = [var.app_access_cidr] #tfsec:ignore:AWS006
+  security_group_id = module.eks_cluster.cluster_primary_security_group_id
+  description       = "Access to application"
+}
+
+resource "aws_security_group_rule" "app_access_http" {
+  type              = "ingress"
+  from_port         = 32010
+  to_port           = 32010
+  protocol          = "tcp"
+  cidr_blocks       = [var.app_access_cidr] #tfsec:ignore:AWS006
+  security_group_id = module.eks_cluster.cluster_primary_security_group_id
+  description       = "Access to application"
 }
 
 module "nlb" {
@@ -258,7 +254,7 @@ module "cpu_alarm" {
   period              = 60
 
   dimensions = {
-    AutoScalingGroupName = module.eks_cluster.workers_asg_names[0]
+    AutoScalingGroupName = module.eks_cluster.node_groups["workers"].resources[0].autoscaling_groups[0].name
   }
 
   alarm_actions = [
@@ -316,7 +312,7 @@ module "status_alarm" {
   period              = 60
 
   dimensions = {
-    AutoScalingGroupName = module.eks_cluster.workers_asg_names[0]
+    AutoScalingGroupName = module.eks_cluster.node_groups["workers"].resources[0].autoscaling_groups[0].name
   }
 
   alarm_actions = [
@@ -345,7 +341,7 @@ module "nodes_alarm" {
   period              = 60
 
   dimensions = {
-    AutoScalingGroupName = module.eks_cluster.workers_asg_names[0]
+    AutoScalingGroupName = module.eks_cluster.node_groups["workers"].resources[0].autoscaling_groups[0].name
   }
 
   alarm_actions = [
