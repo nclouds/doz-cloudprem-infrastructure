@@ -31,11 +31,33 @@ module "cluster_access_role" {
   role_name         = "${local.identifier}-${data.aws_region.current.name}-cluster-access"
   role_requires_mfa = false
 
+  custom_role_policy_arns = [
+    "arn:${data.aws_partition.current.partition}:iam::aws:policy/ReadOnlyAccess",
+    aws_iam_policy.cluster_access.arn,
+  ]
+
   trusted_role_arns = [
     "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root",
   ]
 
   tags = local.tags
+}
+
+data "aws_iam_policy_document" "cluster_access" {
+  statement {
+    actions = [
+      "eks:AccessKubernetesApi",
+    ]
+
+    resources = [
+      "arn:${data.aws_partition.current.partition}:eks:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:cluster/${local.identifier}",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "cluster_access" {
+  name   = "${local.identifier}-${data.aws_region.current.name}-cluster-access"
+  policy = data.aws_iam_policy_document.cluster_access.json
 }
 
 data "aws_iam_policy_document" "eks_worker" {
